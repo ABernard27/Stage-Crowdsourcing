@@ -7,13 +7,16 @@ __pycache__/
 *.so
 
 # Distribution / packaging
+.Rhistory
 .Python
+Crowdsourcing.html
 build/
 develop-eggs/
 dist/
 downloads/
 eggs/
 .eggs/
+.vscode
 lib/
 lib64/
 parts/
@@ -25,6 +28,8 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
+.DS_Store
+Crowdsourcing_files
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
