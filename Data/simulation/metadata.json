@@ -1,0 +1,15 @@
+{
+   "name": "hammer-spammer",
+   "n_workers": 10,
+   "n_classes": 5,
+   "n_task": 100,
+   "strategy": "hammer-spammer",
+   "feedback": 10,
+   "seed": 0,
+   "ratio": 0.2,
+   "folder": "./Data/simulation",
+   "ratio_diff": 1.0,
+   "random": 0.0,
+   "imbalance_votes": false,
+   "verbose": false
+}
