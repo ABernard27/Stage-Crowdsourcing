@@ -1,0 +1,1424 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.433">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Anne Bernard">
+<meta name="dcterms.date" content="2025-03-07">
+
+<title>Minimax de l’entropie conditionnelle régularisée pour le crowdsourcing</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="Crowdsourcing_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Crowdsourcing_files/libs/quarto-html/quarto.js"></script>
+<script src="Crowdsourcing_files/libs/quarto-html/popper.min.js"></script>
+<script src="Crowdsourcing_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="Crowdsourcing_files/libs/quarto-html/anchor.min.js"></script>
+<link href="Crowdsourcing_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Crowdsourcing_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="Crowdsourcing_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="Crowdsourcing_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="Crowdsourcing_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body>
+
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <div class="quarto-title-block"><div><h1 class="title">Minimax de l’entropie conditionnelle régularisée pour le crowdsourcing</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Anne Bernard </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">March 7, 2025</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Sommaire</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction </a><a name="Introduction" class="nav-link" data-scroll-target="undefined" href=""></a></li>
+  <li><a href="#dawid-et-skene" id="toc-dawid-et-skene" class="nav-link" data-scroll-target="#dawid-et-skene">Dawid et Skene </a><a name="Dawid et Skene" class="nav-link" data-scroll-target="undefined" href=""></a></li>
+  <li><a href="#notation-et-principe-du-minimax" id="toc-notation-et-principe-du-minimax" class="nav-link" data-scroll-target="#notation-et-principe-du-minimax">Notation et principe du minimax </a><a name="Notation et principe du minimax" class="nav-link" data-scroll-target="undefined" href=""></a>
+  <ul class="collapse">
+  <li><a href="#forme-primale" id="toc-forme-primale" class="nav-link" data-scroll-target="#forme-primale">Forme Primale </a><a name="Forme Primale" class="nav-link" data-scroll-target="undefined" href=""></a></li>
+  <li><a href="#forme-duale" id="toc-forme-duale" class="nav-link" data-scroll-target="#forme-duale">Forme Duale </a><a name="Forme Duale" class="nav-link" data-scroll-target="undefined" href=""></a></li>
+  <li><a href="#divergence-de-kullback-leibler" id="toc-divergence-de-kullback-leibler" class="nav-link" data-scroll-target="#divergence-de-kullback-leibler">Divergence de Kullback-Leibler </a><a name="Divergence de Kullback-Leibler" class="nav-link" data-scroll-target="undefined" href=""></a></li>
+  <li><a href="#minimax-de-lentropie-conditionnelle-régularisée" id="toc-minimax-de-lentropie-conditionnelle-régularisée" class="nav-link" data-scroll-target="#minimax-de-lentropie-conditionnelle-régularisée">Minimax de l’entropie conditionnelle régularisée </a><a name="Minimax de l'entropie conditionnelle régularisée" class="nav-link" data-scroll-target="undefined" href=""></a></li>
+  <li><a href="#principe-de-mesure-objective" id="toc-principe-de-mesure-objective" class="nav-link" data-scroll-target="#principe-de-mesure-objective">Principe de mesure objective </a><a name="Principe de mesure objective" class="nav-link" data-scroll-target="undefined" href=""></a></li>
+  </ul></li>
+  <li><a href="#implementation" id="toc-implementation" class="nav-link" data-scroll-target="#implementation">Implementation </a><a name="Implementation" class="nav-link" data-scroll-target="undefined" href=""></a>
+  <ul class="collapse">
+  <li><a href="#description-de-lalgorithme" id="toc-description-de-lalgorithme" class="nav-link" data-scroll-target="#description-de-lalgorithme">Description de l’algorithme </a><a name="Description de l'algorithme" class="nav-link" data-scroll-target="undefined" href=""></a></li>
+  <li><a href="#implémentation-de-lalgorithme" id="toc-implémentation-de-lalgorithme" class="nav-link" data-scroll-target="#implémentation-de-lalgorithme">Implémentation de l’algorithme </a><a name="Implementation de l'algorithme" class="nav-link" data-scroll-target="undefined" href=""></a></li>
+  <li><a href="#exemple" id="toc-exemple" class="nav-link" data-scroll-target="#exemple">Exemple </a><a name="Exemple" class="nav-link" data-scroll-target="undefined" href=""></a></li>
+  </ul></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  <li><a href="#annexe" id="toc-annexe" class="nav-link" data-scroll-target="#annexe">Annexe </a><a name="Annexe" class="nav-link" data-scroll-target="undefined" href=""></a>
+  <ul class="collapse">
+  <li><a href="#calcul-des-gradients-de-sigma-et-tau" id="toc-calcul-des-gradients-de-sigma-et-tau" class="nav-link" data-scroll-target="#calcul-des-gradients-de-sigma-et-tau">Calcul des gradients de <span class="math inline">\(\sigma\)</span> et <span class="math inline">\(\tau\)</span></a></li>
+  </ul></li>
+  <li><a href="#références" id="toc-références" class="nav-link" data-scroll-target="#références">Références</a></li>
+  </ul>
+</nav>
+</div>
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction <a name="Introduction" href=""></a></h2>
+<p>&nbsp;&nbsp;&nbsp; Dans ce rapport, nous allons étudier l’article <em>Regularized Minimax Conditional Entropy for Crowdsourcing</em> <span class="citation" data-cites="zhou2015regularized">(<a href="#ref-zhou2015regularized" role="doc-biblioref">Zhou et al. 2015</a>)</span>. Nous allons reprendre certaines parties de leur document qui explique déjà très bien pourquoi la recherche de cette méthode est utile.</p>
+<p>&nbsp;&nbsp;&nbsp; Le crowdsourcing présume qu’une foule peut résoudre des problèmes ou accomplir des tâches mieux qu’un individu ou un groupe d’individus avec diverses significations de “mieux” telles que plus rapidement, plus efficacement ou simplement être capable de résoudre tout le problème.</p>
+<p>&nbsp;&nbsp;&nbsp; Ces dernières années les services de crowdsourcing ont émergés et les coûts sont devenus de plus en plus moindre. Donc il était facile d’obtenir énormément de données étiquetées à moindre coût. Cependant, les étiquettes ne sont pas toujours de bonnes qualités car les travailleurs ne font pas un travail parfait, parfois par simple manque d’expertise. Alors pour palier à ce problème, plusieurs personnes étiquettent les mêmes items et bien souvent l’étiquette gardée est celle choisie par la majorité. Malheureusement, tous les travailleurs ne sont pas réellement égaux car certains sont plus capables que d’autres et donc le choix à la majorité ne reflète pas forcément la vérité puisque quelques votes seront plus fiables que d’autres. C’est alors que Dawid et Skene ont proposé un modèle permettant de remédier à ce problème.</p>
+<p>Cependant cette méthode a ses limites et nous allons voir lesquelles.</p>
+</section>
+<section id="dawid-et-skene" class="level2">
+<h2 class="anchored" data-anchor-id="dawid-et-skene">Dawid et Skene <a name="Dawid et Skene" href=""></a></h2>
+<p>&nbsp;&nbsp;&nbsp; Le modèle d’aggregation de Dawid et Skene est un modèle probabiliste qui paramètre le niveau d’expertise des travailleurs avec des matrices de confusions.</p>
+<p>&nbsp;&nbsp;&nbsp; On considère un système de crowdsourcing avec des items à classifier par des travailleurs. Chaque travailleur possède une matrice de confusion, il s’agit d’une matrice traduisant la probabilité qu’un travailleur mette tel ou tel item dans telle ou telle classe. Les éléments qui ne sont pas sur la diagonale représentent alors les probabilités que le travailleur n’étiquète pas comme il faut un item. Tandis que ceux présents sur la diagonale représente sa précision à être juste pour chaque classe, c’est-à-dire par exemple la probabilité qu’il a de mettre l’image dans la classe “chat” s’il s’agit bien d’un chat.</p>
+<p>On note <span class="math inline">\(\sigma_w\)</span> la matrice de confusion (matrice d’erreur) de taille <span class="math inline">\(n_{classes} \times n_{classes}\)</span> , <span class="math inline">\(Y_i\)</span> la vraie étiquette de l’item <span class="math inline">\(i\)</span> et <span class="math inline">\(X_{wi}\)</span> la classe que le travailleur <span class="math inline">\(w\)</span> a attribué à l’item <span class="math inline">\(i\)</span>. <span class="math inline">\(p\)</span> est le vecteur de probabilité des classes à priori. On a <span class="math inline">\(P(X_{wi}=c)=p[c]\)</span>. La relation entre ces paramètres est représentée par le modèle suivant :</p>
+<center>
+<p><img src="schema1.png" width="500"></p>
+<p>&nbsp;&nbsp;&nbsp; Dans cette méthode, la performance d’un travailleur (la matrice de confusion) reste la même pour tous les items d’une même classe. Ce n’est pas vrai pour tout car parfois un item est plus dur qu’un autre à étiqueter et donc il est plus probable qu’un travailleur se trompe pour cet item. Et parfois peu importe qui étiquète, l’item peut avoir plus tendance à être rangé dans une classe que dans une autre. C’est pourquoi la méthode du minimax de l’entropie conditionnelle régularisée a été développée pour prendre en compte ce dernier argument.</p>
+</center></section>
+<section id="notation-et-principe-du-minimax" class="level2">
+<h2 class="anchored" data-anchor-id="notation-et-principe-du-minimax">Notation et principe du minimax <a name="Notation et principe du minimax" href=""></a></h2>
+<p>&nbsp;&nbsp;&nbsp; Posons tout d’abord les notations. Soit un groupe de travailleur où chaque travailleur est indexé par <span class="math inline">\(w\)</span> (worker), un ensemble d’items indexés par <span class="math inline">\(i\)</span> (item) et un nombre de classes indexées par <span class="math inline">\(c\)</span> ou <span class="math inline">\(v\)</span>. On utilisera <span class="math inline">\(v\)</span> dans le cas où il s’agit de la vraie classe associée à l’item. Soit <span class="math inline">\(x_{wi}\)</span> l’étiquette observée que le travailleur <span class="math inline">\(w\)</span> a assigné à l’item <span class="math inline">\(i\)</span> et <span class="math inline">\(X_{wi}\)</span> la variable aléatoire correspondante.</p>
+<p>&nbsp;&nbsp;&nbsp; On note <span class="math inline">\(Q(Y_i = v)\)</span> la vraie probabilité non-observée que l’item <span class="math inline">\(i\)</span> soit dans la classe <span class="math inline">\(v\)</span>. On dit que l’étiquette est déterministe lorsque <span class="math inline">\(Q(Y_i = v)=1\)</span> et <span class="math inline">\(Q(Y_i = c)=0\)</span> pour tout <span class="math inline">\(c\neq v\)</span>. On note <span class="math inline">\(P(X_{wi}=c|Y_i=v)\)</span> la probabilité que le traveilleur <span class="math inline">\(w\)</span> étiquette l’item <span class="math inline">\(i\)</span> dans la classe <span class="math inline">\(c\)</span> alors que la vraie classe est <span class="math inline">\(v\)</span>. On cherche à estimer les vraies étiquettes non-observées à partir des résultats trompeurs.</p>
+<section id="forme-primale" class="level3">
+<h3 class="anchored" data-anchor-id="forme-primale">Forme Primale <a name="Forme Primale" href=""></a></h3>
+<p>&nbsp;&nbsp;&nbsp; La première approche développée dans le papier est la suivante : on construit 2 tenseurs à 4 dimensions (<span class="math inline">\(w, i, c, v\)</span>). Le premier tenseur est un tenseur de confusion empirique, c’est-à-dire qu’il représente la confusion observée du travailleur <span class="math inline">\(w\)</span> lorsqu’il étiquète l’item <span class="math inline">\(i\)</span> dans la classe <span class="math inline">\(c\)</span> au lieu de <span class="math inline">\(v\)</span>. Le deuxième tenseur est un tenseur de confusion expecté, c’est-à-dire qu’il représente la confusion attendue du travailleur <span class="math inline">\(w\)</span> lorsqu’il étiquète l’item <span class="math inline">\(i\)</span> dans la classe <span class="math inline">\(c\)</span> au lieu de <span class="math inline">\(v\)</span>.</p>
+<p>Premier tenseur : <span class="math display">\[
+\hat{\phi}_{wi}(v,c)=Q(Y_i=v)\mathbb{1}(x_{wi}=c)
+\]</span></p>
+<p>Deuxième tenseur : <span class="math display">\[
+\phi_{wi}(v,c)=Q(Y_i=v)P(X_{wi}=c|Y_i=v)
+\]</span></p>
+<p>On assume que les étiquettes des items sont indépendantes. L’entropie des étiquettes observées des travailleurs conditionnée par les vraies étiquettes peut s’écrire : <span class="math display">\[ H(X|Y)=-\underset{i,v}{\sum}Q(Y_i=v)\underset{w,c}{\sum}P(X_{wi}=c|Y_i=v)\,\text{log}\,P(X_{wi}=c|Y_i=v)\]</span></p>
+<p>On considère d’abord simplement le cas où <span class="math inline">\(Q\)</span> est donné et l’on cherche à estimer <span class="math inline">\(P\)</span>. Supposons que l’on connait la distribution de <span class="math inline">\(Q\)</span>, on cherche à estimer <span class="math inline">\(P\)</span> qui génère les étiquettes des travailleurs. Pour ça on cherche à maximiser l’entropie conditionnelle : <span class="math display">\[ \underset{P}{\text{max}}\,\,\, H(X|Y)\]</span> avec les contraintes des travailleurs et des items suivantes : <span class="math display">\[
+\underset{i}{\sum} \big[\phi_{wi}(v,c)-\hat{\phi}_{wi}(v,c)\big]=0, \,\, \forall w,c,v  
+\]</span> <span class="math display">\[
+\underset{w}{\sum} \big[\phi_{wi}(v,c)-\hat{\phi}_{wi}(v,c)\big]=0, \,\, \forall i,c,v
+\]</span></p>
+<p>et également les contraintes de probabilités : <span class="math display">\[\underset{c}{\sum}P(X_{wi}=c|Y_i=v)=1, \,\, \forall w,i,v, \]</span> <span class="math display">\[\underset{v}{\sum}Q(Y_i=v)\geq 0,\,\, \forall i, \]</span> <span class="math display">\[Q(Y_i=v)\geq0, \,\, \forall i,v\]</span></p>
+<p>&nbsp;&nbsp;&nbsp; Dans le cas où on ne connait pas les distributions <span class="math inline">\(P\)</span> et <span class="math inline">\(Q\)</span>, on souhaite estimer conjointement les deux par le minimax : <span class="math display">\[ \underset{Q}{\text{min}}\,\, \underset{P}{\text{max}} \,\,\, H(X|Y)\]</span> Les contraintes sont les mêmes que précédemment. L’entropie est une sorte de mesure de l’incertain donc minimiser le maximum de l’entropie conditionnelle signifie qu’étant donné les vraies étiquettes, celles donnés par les travailleurs sont les moins aléatoires.</p>
+</section>
+<section id="forme-duale" class="level3">
+<h3 class="anchored" data-anchor-id="forme-duale">Forme Duale <a name="Forme Duale" href=""></a></h3>
+<p>&nbsp;&nbsp;&nbsp; Le problème peut également s’étendre sous forme duale. Le Lagrangien du problème de maximisation précédent peut être écrit comme suit : <span class="math display">\[
+L = H(X|Y)+L_\sigma+L_\tau+L_\lambda \,\,\,\,\, \text{avec}
+\]</span> <span class="math display">\[L_\sigma = \underset{w,v,c}{\sum}\sigma_w(v,c)\underset{i}{\sum}\Big[\phi_{wi}(v,c)-\hat{\phi}_{wi}(v,c)\Big],\]</span> <span class="math display">\[L_\tau = \underset{i,v,c}{\sum}\tau_i(v,c)\underset{w}{\sum}\Big[\phi_{wi}(v,c)-\hat{\phi}_{wi}(v,c)\Big],\]</span> <span class="math display">\[L_\lambda = \underset{w,i,v}{\sum}\lambda_{wiv}\Big[\underset{k}{\sum}P(X_{wi}=c|Y_i=v)-1\Big]\]</span></p>
+<p>où <span class="math inline">\(\sigma_w(v,c)\)</span>,<span class="math inline">\(\tau_i(v,c)\)</span> et <span class="math inline">\(\lambda_{wiv}\)</span> sont les multiplicateurs de Lagrange. Par les conditions KKT on a que <span class="math display">\[\frac{\partial L}{\partial P(X_{wi}=c|Y_i=v)}=0\]</span> ce qui implique : <span class="math display">\[\text{log}\,P(X_{wi}=c|Y_i=v)=\lambda_{wiv}-1+\sigma_w(v,c)+\tau_i(v,c)\]</span></p>
+<p>On obtient ensuite avec les contraintes : <span class="math display">\[P(X_{wi}=c|Y_i=v)=\frac{1}{Z_{wi}}\,\text{exp}[\sigma_w(v,c)+\tau_i(v,c)]\]</span> où <span class="math inline">\(Z_{wi}=\underset{c}{\sum}\text{exp}[\sigma_w(v,c)+\tau_i(v,c)]\)</span> est le facteur de normalisation.</p>
+<p>&nbsp;&nbsp;&nbsp; La matrice <span class="math inline">\([\sigma_w(v,c)]\)</span> peut être considérée comme la mesure de l’habilité du travailleur <span class="math inline">\(w\)</span>. La <span class="math inline">\((v,c)\)</span>-ième entrée mesure la probabilité que le travailleur <span class="math inline">\(w\)</span> étiquète un item choisi aléatoirement dans la classe <span class="math inline">\(c\)</span> au lieu de la classe <span class="math inline">\(v\)</span>. Et <span class="math inline">\([\tau_i(v,c)]\)</span> peut être considérée comme la mesure de la difficulté d’un item <span class="math inline">\(i\)</span>. La <span class="math inline">\((v,c)\)</span>-ième entrée de la matrice mesure la probabilité qu’un item <span class="math inline">\(i\)</span> de la classe <span class="math inline">\(v\)</span> soit étiqueté dans la classe <span class="math inline">\(c\)</span> par un travailleur choisi aléatoirement.</p>
+<p>On obtient alors la forme dual du problème de minimax : <span class="math display">\[ \underset{\sigma,\tau,Q}{\text{max}}\,\,\,\,\,\underset{i,v}{\sum}Q(Y_i=v)\underset{w}{\sum}\,\text{log}\,P(X_{wi}=x_{wi}|Y_i=v)\]</span></p>
+<p>Pour que ce soit optimal, il faut que la vraie étiquette soit déterministe.</p>
+</section>
+<section id="divergence-de-kullback-leibler" class="level3">
+<h3 class="anchored" data-anchor-id="divergence-de-kullback-leibler">Divergence de Kullback-Leibler <a name="Divergence de Kullback-Leibler" href=""></a></h3>
+<p>&nbsp;&nbsp;&nbsp; Soit <span class="math inline">\(P\)</span> et <span class="math inline">\(Q\)</span>, deux distributions de l’espace produit <span class="math inline">\(X\times Y\)</span>. On étend cette distribution <span class="math inline">\(Q\)</span> défini par <span class="math inline">\(Q(X_{wi}=x_{wi})=1\)</span>, et <span class="math inline">\(Q(Y)\)</span> reste la même. On étend la distribution de <span class="math inline">\(P\)</span> avec <span class="math inline">\(P(X,Y)=\underset{wi}{\prod}P(X_{wi}|Y_i)P(Y_i)\)</span> où <span class="math inline">\(P(X_{wi}|Y_i)\)</span> est le même que précédemment et <span class="math inline">\(P(Y)\)</span> est une distribution uniforme sur toutes les classes possibles.</p>
+<div class="callout callout-style-default callout-important no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Théorème
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Quand les vraies étiquettes sont déterministes, minimiser la divergence de Kullback Leibler de <span class="math inline">\(Q\)</span> à <span class="math inline">\(P\)</span>, qui est, <span class="math display">\[\underset{P,Q}{\text{min}} \Big\{D_{\text{KL}}(Q||P)\,\,=\,\,\underset{X,Y}{\sum}Q(X,Y)\,\text{log}\,\frac{Q(X,Y)}{P(X,Y)} \Big\}\]</span> est équivalent au problème du minimax d’avant.</p>
+</div>
+</div>
+<p>&nbsp;&nbsp;&nbsp; On ne présentera pas la preuve dans ce document elle se déroule en montrant que :</p>
+<p><span class="math display">\[
+\begin{equation}
+\begin{split}
+D_{KL}(Q||P)\,\, = \,\, &amp;-\underset{i,v}{\sum}Q(Y_i=v)\underset{w,c}{\sum}P(X_{wi}=c | Y_i=v)\text{log}P(X_{wi}=c|Y_i=v)+ \\
+&amp; \underset{Y}{\sum}Q(Y\text{log}Q(Y)-\text{log}P(Y))
+\end{split}
+\end{equation}
+\]</span></p>
+<p>Par la définition de <span class="math inline">\(P(X,Y)\)</span>, <span class="math inline">\(P(Y)\)</span> est constant. De plus, lorsque les vraies étiquettes sont déterministes on a que <span class="math inline">\(\underset{Y}{\sum}Q(Y)\text{log}Q(Y)=0\)</span>, ce qui conclut la preuve.</p>
+</section>
+<section id="minimax-de-lentropie-conditionnelle-régularisée" class="level3">
+<h3 class="anchored" data-anchor-id="minimax-de-lentropie-conditionnelle-régularisée">Minimax de l’entropie conditionnelle régularisée <a name="Minimax de l'entropie conditionnelle régularisée" href=""></a></h3>
+<p>&nbsp;&nbsp;&nbsp; Il faut régulariser la méthode du minimax de l’entropie conditionnelle pour deux raisons principales : </p>
+<ul>
+<li><p>Dans la méthode du minimax décrite avant, on peut seulement générer des étiquettes déterministes alors qu’en pratique les étiquettes probabilistes sont généralement plus utiles. Lorsque la répartition des étiquettes pour un item est presque uniforme sur plusieurs classes, on peut demander plus d’étiquettes pour l’item ou transmettre l’item à un expert externe. </p></li>
+<li><p>Parfois, le nombre de données n’est pas suffisant pour avoir une distribution continue, donc on peut se retrouver avec des uniformes ou des dirac et donc ce ne sera pas représentatif de la vérité, en tout cas on ne peut pas en être sûre.</p></li>
+</ul>
+<p>Il faudrait alors pénaliser les larges fluctuations, et considérer une régularisation d’entropie sur la vraie distribution inconnue d’étiquettes. Formellement, on régularise de la manière qui suit.</p>
+<p>L’entropie de la vraie distribution des étiquettes s’écrit : <span class="math display">\[H(Y)\,=\,-\,\underset{i,v}{\sum}\,Q(Y_i=v)\text{log}Q(Y_i=v)\]</span> Pour estimer les vraies étiquettes, on considère : <span class="math display">\[\underset{Q}{\text{min}}\,\underset{P}{\text{max}} \, \, H(X|Y)-H(Y)-\frac{1}{\alpha}\Omega(\xi)-\frac{1}{\beta}\Psi(\zeta)\]</span></p>
+<p>avec les contraintes sur les travailleurs et les items suivantes : <span class="math display">\[\underset{i}{\sum}\,\big[\phi_{wi}(v,c)-\hat{\phi}_{wi}(v,c)\big] \, = \, \xi_w(v,c), \,\,\, \forall w,
+\]</span> <span class="math display">\[\underset{w}{\sum}\,\big[\phi_{wi}(v,c)-\hat{\phi}_{wi}(v,c)\big] \, = \, \zeta_i(v,c), \,\,\, \forall i.
+\]</span></p>
+<p>et les contraintes de probabilités précédentes. Les fonctions de régularisation <span class="math inline">\(\Omega\)</span> et <span class="math inline">\(\Psi\)</span> sont choisies par : <span class="math display">\[\Omega(\xi)=\frac{1}{2}\underset{w}{\sum}\underset{v,c}{\sum}[\xi_w(v,c)]^2,
+\]</span> <span class="math display">\[\Psi(\zeta)=\frac{1}{2}\underset{i}{\sum}\underset{v,c}{\sum}[\zeta_i(v,c)]^2,
+\]</span></p>
+<p>Les variables <span class="math inline">\(\xi_w(v,c)\)</span> et <span class="math inline">\(\zeta_i(v,c)\)</span> modélisent les possibles fluctuations. À noter que ces variables ne sont pas nécessairement positives. Lorsqu’il y a un grand nombre d’observation, les fluctuations sont approximativement distribuées normalement (théorème centrale limite). C’est pourquoi on introduit des fonctions de régularisations pour pénaliser les fortes fluctuations. L’entropie <span class="math inline">\(H(Y)\)</span> peut être vue comme pénalisant une large déviation à la distribution uniforme.</p>
+<p>On obtient ensuite la forme duale :</p>
+<p><span class="math display">\[
+\underset{\sigma,\tau,Q}{\text{max}} \,\,\,\, \underset{i,v}Q(Y_i=v)\,\underset{w}{\sum}\text{log}\,P(X_{wi}=x_{wi}|Y_i=v)+H(Y)-\alpha\Omega^{*}(\sigma)-\beta\Psi^{*}(\tau)
+\]</span></p>
+<p>où <span class="math display">\[\Omega^{*}(\sigma)=\frac{1}{2}\underset{w}{\sum}\underset{v,c}{\sum}[\sigma_w(v,c)]^2,
+\]</span> <span class="math display">\[\Psi^{*}(\tau)=\frac{1}{2}\underset{i}{\sum}\underset{v,c}{\sum}[\tau_i(v,c)]^2,
+\]</span></p>
+</section>
+<section id="principe-de-mesure-objective" class="level3">
+<h3 class="anchored" data-anchor-id="principe-de-mesure-objective">Principe de mesure objective <a name="Principe de mesure objective" href=""></a></h3>
+<p>&nbsp;&nbsp;&nbsp; Dans cette section, nous allons voir le principe de mesure objective qui est décrit dans le document initial afin de montrer que le modèle d’étiquetage probabiliste est une conséquence de ce principe. Le principe peut être décrit comme suit :</p>
+<ol class="example" type="1">
+<li><p>Une comparaison de la difficulté d’étiquetage entre deux éléments doit être indépendante des travailleurs particuliers impliqués dans la comparaison ; et il devrait également être indépendant des autres éléments qui pourraient également être comparés</p></li>
+<li><p>Symétriquement, une comparaison de la capacité d’étiquetage entre deux travailleurs devrait être indépendante des éléments particuliers impliqués dans la comparaison ; et il devrait également être indépendant des autres travailleurs qui pourraient également être comparés.</p></li>
+</ol>
+<p>&nbsp;&nbsp;&nbsp; On va maintenant décrire le principe mathématiquement.</p>
+<p>On suppose que le travailleur <span class="math inline">\(w\)</span> a étiqueté les items <span class="math inline">\(i\)</span> et <span class="math inline">\(i'\)</span> dans la classe <span class="math inline">\(v\)</span>. On écrit <span class="math inline">\(E\)</span> l’évènement que “un des deux items est étiqueté <span class="math inline">\(c\)</span> et l’autre <span class="math inline">\(v\)</span>”.</p>
+<p><span class="math display">\[
+E = \Big\{\mathbb{1}(X_{wi=c})+\mathbb{1}(X_{wi'}=c)=1\, , \, \mathbb{1}(X_{wi=v})+\mathbb{1}(X_{wi'}=v)=1\Big\}
+\]</span></p>
+<p>On écrit <span class="math inline">\(A\)</span> l’évènement que l’item <span class="math inline">\(i\)</span> soit étiqueté en tant que <span class="math inline">\(c\)</span> et <span class="math inline">\(i'\)</span> en tant que <span class="math inline">\(v\)</span>.</p>
+<p><span class="math display">\[
+A = \Big\{X_{wi}=c,X_{wi'}=v\Big\}
+\]</span></p>
+<p>On formule maintenant l’exigence 1. du principe. <span class="math inline">\(P(A|E)\)</span> est indépendant du travailleur <span class="math inline">\(w\)</span>. On note : <span class="math display">\[
+P(A|E)\,=\,\frac{P(X_{wi}=c|Y_i=v)P(X_{wi'}=v|Y_{i'}=v)}{P(X_{wi}=c|Y_i=v)P(X_{wi'}=v|Y_{i'}=v)+P(X_{wi}=v|Y_i=v)P(X_{wi'}=c|Y_{i'}=v)}
+\]</span></p>
+<p>Ainsi <span class="math inline">\(P(A|E)\)</span> est indépendant du travailleur <span class="math inline">\(w\)</span> si et seulement si :</p>
+<p><span class="math display">\[
+\frac{P(X_{wi}=c|Y_i=v)P(X_{wi'}=v|Y_{i'}=v)}{P(X_{wi}=v|Y_i=v)P(X_{wi'}=c|Y_{i'}=v)}
+\]</span></p>
+<p>est indépendant du traveilleur <span class="math inline">\(w\)</span>. En d’autres termes, en prenant un autre travailleur <span class="math inline">\(w'\)</span> arbitrairement, on devrait avoir :</p>
+<p><span class="math display">\[
+\frac{P(X_{wi}=c|Y_i=v)P(X_{wi'}=v|Y_{i'}=v)}{P(X_{wi}=v|Y_i=v)P(X_{wi'}=c|Y_{i'}=v)}=\frac{P(X_{w'i}=c|Y_i=v)P(X_{w'i'}=v|Y_{i'}=v)}{P(X_{w'i}=v|Y_i=v)P(X_{w'i'}=c|Y_{i'}=v)}
+\]</span></p>
+<p>Sans perte de généralite, on choisit <span class="math inline">\(w'=0\)</span> et <span class="math inline">\(i'=0\)</span> comme références fixes. Donc,</p>
+<p><span class="math display">\[
+\frac{P(X_{wi}=c|Y_i=v)}{P(X_{wi}=v|Y_i=v)}=\frac{P(X_{w0}=c|Y_0=v)P(X_{0i}=v|Y_{i}=v)}{P(X_{w0}=v|Y_0=v)P(X_{0i}=c|Y_{i}=v)}
+\]</span></p>
+<p>On peut alors écrire :</p>
+<p><span class="math display">\[
+P(X_{w0}=c|Y_0=v)=\text{exp}[\sigma_w(v,c)]\,,\,\,\, P(X_{0i}=c|Y_i=v)=\text{exp}[\tau_i(v,c)]
+\]</span></p>
+<p>Le modèle d’étiquetage probabiliste suit immédiatement. Il est facile de vérifier qu’en raison de la symétrie entre la difficulté de l’item et la capacité du travailleur, nous pouvons formuler l’exigence 2. pour obtenir le même résultat. Ainsi, les deux exigences sont en fait redondantes.</p>
+</section>
+</section>
+<section id="implementation" class="level2">
+<h2 class="anchored" data-anchor-id="implementation">Implementation <a name="Implementation" href=""></a></h2>
+<section id="description-de-lalgorithme" class="level3">
+<h3 class="anchored" data-anchor-id="description-de-lalgorithme">Description de l’algorithme <a name="Description de l'algorithme" href=""></a></h3>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Algorithme : Minimax de l’entropie conditionnelle régularisée pour le crowdsourcing
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><span class="math inline">\(\bf{input:}\)</span> <span class="math inline">\(\{x_{wi}\},\alpha, \beta\)</span></p>
+<p><span class="math inline">\(\bf{initialize:}\)</span> <span class="math display">\[
+Q(Y_i=v) \propto  \underset{w}{\sum}\mathbb{1}(x_{wi}=v)
+\]</span></p>
+<p><span class="math inline">\(\bf{repeat:}\)</span> <span class="math display">\[
+\{\sigma, \tau\} \, = \, \text{arg}\, \underset{\sigma, \tau}{\text{max}}\, \underset{w,i,v}{\sum} Q(Y_i=v)\text{log}\, P(X_{wi}=x_{wi}|Y_i=v)-\alpha\Omega^{*}(\sigma)-\beta\Psi^{*}(\tau)
+\]</span> <span class="math display">\[
+Q(Y_i=v)\propto \underset{w}{\prod}P(X_{wi}=x_{wi}|Y_i=v)
+\]</span></p>
+<p><span class="math inline">\(\bf{output:}\)</span> <span class="math inline">\(Q\)</span></p>
+</div>
+</div>
+<p>&nbsp;&nbsp;&nbsp; On va s’attaquer à l’implémentation de la méthode pour résoudre le problème sous forme dual. On initialise d’abord l’estimation des étiquettes par aggregation des votes dans l’équation : <span class="math display">\[Q(Y_i=v) \propto \underset{w}{\sum}\mathbb{1}(x_{wi}=v)\]</span></p>
+<p>Ensuite, pour chaque itération, étant donné les estimations actuelles des étiquettes, mettre à jour l’estimation des matrices de confusion des travailleurs et des items en résolvant le problème d’optimisation : <span class="math display">\[\{\sigma, \tau\} \, = \, \text{arg}\, \underset{\sigma, \tau}{\text{max}}\, \underset{w,i,v}{\sum} Q(Y_i=v)\text{log}\, P(X_{wi}=x_{wi}|Y_i=v)-\alpha\Omega^{*}(\sigma)-\beta\Psi^{*}(\tau) \]</span></p>
+<p>et, étant donnée l’estimation actuelle des matrices de confusion des travailleurs et des items, mettre à jour les estimations des étiquettes par la formule fermée : <span class="math display">\[Q(Y_i=v)\propto \underset{w}{\prod}P(X_{wi}=x_{wi}|Y_i=v)\]</span></p>
+<p>ce qui est la même chose qu’appliquer la règle de Bayes avec un prior uniforme. Le problème d’optimisation précédent est fortement convexe et lisse. Plusieurs algorithmes peuvent être appliqués. On va utiliser la méthode de montée de gradient. Pour des étiquettes multiclasses, les gradients sont calculés par (calcul en Annexe) : <span class="math display">\[\frac{\partial F}{\partial \sigma_w(v,c)} = \sum_i Q(Y_i=v)[\mathbb{1}(x_{wi}=c)-P(X_{wi}=c|Y_i=v)]-\alpha\sigma_w(v,c),\]</span> <span class="math display">\[\frac{\partial F}{\partial \tau_i(v,c)} = \sum_w Q(Y_i=v)[\mathbb{1}(x_{wi}=c)-P(X_{wi}=c|Y_i=v)]-\beta\tau_i(v,c),\]</span></p>
+<p>Concernant les valeurs de <span class="math inline">\(\alpha\)</span> et <span class="math inline">\(\beta\)</span>, nous avons utilisé les formules proposées dans l’article étudié qui sont les suivantes :</p>
+<p><span class="math display">\[
+\alpha = \gamma \times (\text{nombre de classes})^2
+\]</span></p>
+<p>où <span class="math inline">\(\gamma \in \{2^{-2}, 2^{-1}, 2^0, 2^1, 2^2\}\)</span> <span class="math display">\[
+\beta = \frac{\text{nombre de label par travailleur}}{\text{nombre de label par item}} \times \alpha
+\]</span></p>
+<p>Il peut exister des cas où les travailleurs ne votent pas tous pour le même nombre d’item et que chaque item ne possède pas le même nombre de label. Nous avons donc fait une moyenne.</p>
+</section>
+<section id="implémentation-de-lalgorithme" class="level3">
+<h3 class="anchored" data-anchor-id="implémentation-de-lalgorithme">Implémentation de l’algorithme <a name="Implementation de l'algorithme" href=""></a></h3>
+<p>&nbsp;&nbsp;&nbsp; Pour déterminer la distribution empirique des vraies étiquettes, j’ai réalisé une fonction qui, à partir des données observées, renvoie la distribution exacte de ces données. Voici le code :</p>
+<div class="cell" data-execution_count="1">
+<details>
+<summary>Voir le code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> dist_Q(data, n_classes):</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Calculate the distribution of the labels given by the observation</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">    Parameters:</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">    - data (dict): A dict with worker's answers.</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">    - n_classes (int): The number of classes.</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">    Returns:</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">    - dict: A dictionary containing the distribution of Q</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    d <span class="op">=</span> {}</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(worker_json(data))):</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>        vec <span class="op">=</span> get_vec(<span class="bu">list</span>(worker_json(data)[<span class="ss">f"</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">"</span>].values()), n_classes)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>        d[<span class="ss">f"</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">"</span>] <span class="op">=</span> {}</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> c <span class="kw">in</span> <span class="bu">range</span>(n_classes):</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>            d[<span class="ss">f"</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">"</span>][<span class="ss">f"</span><span class="sc">{</span>c<span class="sc">}</span><span class="ss">"</span>] <span class="op">=</span> vec[c]</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> d</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Ensuite nous cherchons à optimiser <span class="math inline">\(\sigma\)</span> et <span class="math inline">\(\tau\)</span>, qui sont tous les deux des tenseurs, à l’aide d’une montée de gradient. Pour cela nous devons tout d’abord calculer les gradients de ces deux derniers. Chaque tenseur à son propre code mais les deux sont très similaires, nous montrerons que le code pour calculer le gradient de <span class="math inline">\(\sigma\)</span>.</p>
+<div class="cell" data-execution_count="2">
+<details>
+<summary>Voir le code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> gradient_sigma(n_workers, n_classes, n_items, data,</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>                   sigma, tau, Q):</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">    Computes the gradient of the sigma parameter in a multi-class </span><span class="ch">\</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">    classification problem.</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">    Parameters:</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co">        n_workers (int): The number of workers.</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co">        n_classes (int): The number of classes.</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co">        n_items (int): The number of items.</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co">        data (dict): The data for the classification problem.</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co">        sigma (torch.Tensor): The sigma parameter.</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co">    Returns:</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co">        DF_sigma (torch.Tensor): The gradient of the sigma parameter.</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    alpha <span class="op">=</span> params(data, n_classes)[<span class="dv">0</span>]</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    DF_sigma <span class="op">=</span> torch.zeros((n_workers, n_classes, n_classes))</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> w <span class="kw">in</span> <span class="bu">range</span>(n_workers):</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> v <span class="kw">in</span> <span class="bu">range</span>(n_classes):</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> c <span class="kw">in</span> <span class="bu">range</span>(n_classes):</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>                DFc <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>                ind <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>                <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(n_items):</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>                    <span class="co"># expo = 0</span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>                    <span class="cf">if</span> data[<span class="ss">f"</span><span class="sc">{</span>w<span class="sc">}</span><span class="ss">"</span>][<span class="ss">f"</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">"</span>] <span class="op">==</span> c:</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>                        ind <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>                    <span class="cf">else</span>:</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>                        ind <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>                    k <span class="op">=</span> data[<span class="ss">f"</span><span class="sc">{</span>w<span class="sc">}</span><span class="ss">"</span>][<span class="ss">f"</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">"</span>]</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>                    st <span class="op">=</span> sigma[w]<span class="op">+</span>tau[i]</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>                    P <span class="op">=</span> torch.softmax(st, dim<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>                    DFc <span class="op">+=</span> Q[<span class="ss">f"</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">"</span>][<span class="ss">f"</span><span class="sc">{</span>v<span class="sc">}</span><span class="ss">"</span>]<span class="op">*</span>(ind <span class="op">-</span> P[v, k])</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>                DF_sigma[w, v, c] <span class="op">=</span> DFc<span class="op">-</span>alpha<span class="op">*</span>sigma[w, v, c]</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> DF_sigma</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Maintenant que les gradients sont calculés il nous suffit de faire les montées de gradient associées. Les paramètres de la montée sont par défaut <em>learning_rate=0.01</em> et <em>max_iteration=10</em> mais ils peuvent être changés.</p>
+<div class="cell" data-execution_count="3">
+<details>
+<summary>Voir le code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> gradient_ascent(n_workers, n_classes, n_items, data, sigma, tau, Q,</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>                    learning_rate<span class="op">=</span><span class="fl">0.01</span>, max_iterations<span class="op">=</span><span class="dv">10</span>):</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">    Perform gradient ascent optimization.</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">    Args:</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">        n_workers (int): Number of workers.</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">        n_classes (int): Number of classes.</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">        n_items (int): Number of items.</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co">        data (dict): Data observed.</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co">        sigma (torch.Tensor): Sigma parameter.</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co">        learning_rate (float): Learning rate.</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co">        max_iterations (int): Maximum number of iterations.</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co">    Returns:</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co">        sigma, tau (float): Sigma and tau values.</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(max_iterations):</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>        sigma_up <span class="op">=</span> sigma <span class="op">+</span> learning_rate <span class="op">*</span> <span class="op">\</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>            gradient_sigma(n_workers, n_classes, n_items, data, sigma, tau, Q)</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>        tau_up <span class="op">=</span> tau <span class="op">+</span> learning_rate <span class="op">*</span> <span class="op">\</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>            gradient_tau(n_workers, n_classes, n_items, data, sigma, tau, Q)</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>        sigma <span class="op">=</span> sigma_up</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>        tau <span class="op">=</span> tau_up</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> sigma_up, tau_up</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Une fois nos tenseurs optimiisés nous allons les utiliser afin de mettre à jour la distribution <span class="math inline">\(Q\)</span>. Les travailleurs pouvant faire des erreurs, ce code nous permet d’obtenir une distribution plus vraie au fur et à mesure des étapes.</p>
+<div class="cell" data-execution_count="4">
+<details>
+<summary>Voir le code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> update_Q(data, n_workers, n_classes, n_items, sigma, tau):</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Update Q.</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">    Args:</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co">        data (dict): Data for optimization.</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">        n_workers (int): Number of workers.</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co">        n_classes (int): Number of classes.</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co">        n_items (int): Number of items.</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co">        sigma (tensor): Sigma tensor.</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co">        tau (tensor): Tau tensor.</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    Q <span class="op">=</span> {}</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(n_items):</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>        Q[<span class="ss">f"</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">"</span>] <span class="op">=</span> {}</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>        Q_list <span class="op">=</span> []</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> v <span class="kw">in</span> <span class="bu">range</span>(n_classes):</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>            S <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> w <span class="kw">in</span> <span class="bu">range</span>(n_workers):</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>                k <span class="op">=</span> data[<span class="ss">f"</span><span class="sc">{</span>w<span class="sc">}</span><span class="ss">"</span>][<span class="ss">f"</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">"</span>]</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>                st <span class="op">=</span> sigma[w]<span class="op">+</span>tau[i]</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>                sumexp <span class="op">=</span> torch.logsumexp(st, dim<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>                S <span class="op">=</span> S <span class="op">+</span> st[v, k].item() <span class="op">-</span> sumexp[v].item()</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>            Q[<span class="ss">f"</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">"</span>][<span class="ss">f"</span><span class="sc">{</span>v<span class="sc">}</span><span class="ss">"</span>] <span class="op">=</span> np.exp(S)</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>            Q_list.append(Q[<span class="ss">f"</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">"</span>][<span class="ss">f"</span><span class="sc">{</span>v<span class="sc">}</span><span class="ss">"</span>])</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> v1 <span class="kw">in</span> <span class="bu">range</span>(n_classes):</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>            Q[<span class="ss">f"</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">"</span>][<span class="ss">f"</span><span class="sc">{</span>v1<span class="sc">}</span><span class="ss">"</span>] <span class="op">=</span> Q[<span class="ss">f"</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">"</span>][<span class="ss">f"</span><span class="sc">{</span>v1<span class="sc">}</span><span class="ss">"</span>]<span class="op">/</span>np.<span class="bu">sum</span>(Q_list)</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> Q</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Afin d’optimiser au maximum la distribution de <span class="math inline">\(Q\)</span> il nous faut répéter ce code plusieurs fois. C’est-à-dire qu’on repart des calculs des gradients de <span class="math inline">\(\sigma\)</span> et <span class="math inline">\(\tau\)</span> mais cette fois en utilisant la nouvelle distribution pour <span class="math inline">\(Q\)</span> que l’on a obtenu, ainsi de suite.</p>
+</section>
+<section id="exemple" class="level3">
+<h3 class="anchored" data-anchor-id="exemple">Exemple <a name="Exemple" href=""></a></h3>
+<section id="bluebirds" class="level4">
+<h4 class="anchored" data-anchor-id="bluebirds">Bluebirds</h4>
+<p>&nbsp;&nbsp;&nbsp; Nous avons ensuite réaliser plusieurs exemples afin de tester notre code. Tout d’abord nous avons utiliser le jeu de données <em>bluebirds</em> <span class="citation" data-cites="bluebirds">(<a href="#ref-bluebirds" role="doc-biblioref">Welinder, n.d.</a>)</span>, il a fallu dans un premier temps le travailler pour le mettre dans un format adéquat au code. Tout est dans le fichier <code>script_test.py</code>.</p>
+<p>Nous avons choisi une initialisation de <span class="math inline">\(\sigma\)</span> et <span class="math inline">\(\tau\)</span> simples, nous avons pris des tenseurs de zéros. On choisit de réaliser seulement 10 itérations car cela converge assez vite donc on voit déjà les résultats apparaitrent.</p>
+<div class="cell" data-execution_count="5">
+<details>
+<summary>Voir le code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>sigma <span class="op">=</span> torch.zeros((n_workers, n_classes, n_classes))</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>tau <span class="op">=</span> torch.zeros((n_items, n_classes, n_classes))</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>num_iterations <span class="op">=</span> <span class="dv">10</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>Q <span class="op">=</span> dist_Q(bluebirds, n_classes)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(num_iterations):</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    sigma_up, tau_up <span class="op">=</span> gradient_ascent(</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>        n_workers, n_classes, n_items, bluebirds, sigma, tau, Q)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    Q <span class="op">=</span> update_Q(bluebirds, n_workers, n_classes, n_items, sigma_up, tau_up)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    sigma <span class="op">=</span> sigma_up</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    tau <span class="op">=</span> tau_up</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>On obtient suite à ce code des résultats qui correspondent plutôt bien à la réalite. Pour vérifier cela nous allons calculer l’erreur. Le code est adapté pour cet exemple, nous n’avons pas réalisé un code général, ce n’était pas le but principal. Suite à cela nous obtenons un taux d’erreur de <span class="math inline">\(15\%\)</span> ce qui est vraiment pas mal par rapport à ce qui a été trouvé dans l’article. Nous ne saurons pas dire pourquoi notre taux est plus faible que le leur (qui est de <span class="math inline">\(36\%\)</span>).</p>
+</section>
+<section id="hammerspammer" class="level4">
+<h4 class="anchored" data-anchor-id="hammerspammer">Hammer/Spammer</h4>
+<p>&nbsp;&nbsp;&nbsp; Nous avons ensuite réalisé un deuxième exemple pour nous conforter dans l’utilisation du code. Pour cela nous avons utiliser la fonction <code>simulate</code> du package <code>peerannot</code> <span class="citation" data-cites="peerannot">(<a href="#ref-peerannot" role="doc-biblioref">Lefort, n.d.</a>)</span> qui nous permet d’obtenir un jeu de données avec les réponses de travailleurs sur un certain nombres d’items et de classes.</p>
+<p>Nous avons générer des données avec 10 travailleurs, 100 items et 5 classes. <span class="math inline">\(\sigma\)</span> et <span class="math inline">\(\tau\)</span> sont initialisés avec des uns cette fois. Le choix de l’initialisation est un peu arbitraire mais on préviligie les cas simples. Il a également fallu ré-arranger les données car le dictionnaire est trié dans l’ordre “item-worker-label” et pour notre code il faut l’ordre “worker-item-label”. Pour cela nous avons utiliser la fonction <code>item_json</code> dans le fichier <code>annex_def.py</code>.</p>
+<div class="cell" data-execution_count="6">
+<details>
+<summary>Voir le code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>sigma <span class="op">=</span> torch.ones((n_workers, n_classes, n_classes))</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>tau <span class="op">=</span> torch.ones((n_items, n_classes, n_classes))</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>num_iterations <span class="op">=</span> <span class="dv">10</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>Q <span class="op">=</span> dist_Q(hammer_spammer, n_classes)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(num_iterations):</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    sigma_up, tau_up <span class="op">=</span> gradient_ascent(</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>        n_workers, n_classes, n_items, hammer_spammer, sigma, tau, Q)</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    Q <span class="op">=</span> update_Q(hammer_spammer, n_workers, n_classes, n_items, sigma_up,</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>                 tau_up)</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    sigma <span class="op">=</span> sigma_up</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    tau <span class="op">=</span> tau_up</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Le code est similaire au précédent. Nous allons, à présent, calculer le taux d’erreur. Le code est également pour ce jeu-ci donc pas général. Les données étant déjà presque parfaites (peu de personne se trompe), on obtient un taux d’erreur de <span class="math inline">\(0\%\)</span>. C’est surprenant mais pas étonnant car les travailleurs ont quasiment tous donnés les bonnes réponses.</p>
+</section>
+</section>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>Nous avons pu remarquer que le code réalisé nous donne de très bons résultats dans le cas de nos exemples. Ce code a néanmoins plusieurs limites. Tout d’abord lorsqu’il y a beaucoup de données le code est très chronophage à cause des nombreuses boucles. Cela peut donc être amélioré. De plus, les données que nous pouvons utiliser pour ce code sont seulement celles où tous les travailleurs ont voté pour tous les items ce qui n’est pas toujours le cas dans la vie. Nous avons eu la chance d’avoir des jeux de données pouvant tester notre code mais certains jeux ne passeront pas.</p>
+</section>
+<section id="annexe" class="level2">
+<h2 class="anchored" data-anchor-id="annexe">Annexe <a name="Annexe" href=""></a></h2>
+<section id="calcul-des-gradients-de-sigma-et-tau" class="level3">
+<h3 class="anchored" data-anchor-id="calcul-des-gradients-de-sigma-et-tau">Calcul des gradients de <span class="math inline">\(\sigma\)</span> et <span class="math inline">\(\tau\)</span></h3>
+<p>Soit <span class="math inline">\(F\)</span>, la fonction définie par :</p>
+<p><span class="math display">\[\begin{equation}
+\begin{split}
+F(\sigma,\tau)=&amp;\underset{w,i,v}{\sum}Q(Y_i=v)\,\text{log}P(X_{wi}=x_{wi}|Y_i=v)- \alpha\Omega^*(\sigma)-\beta\Psi^*(\tau)\\
+=&amp; \underset{w,i,v}{\sum}Q(Y_i=v)\,\text{log}\Big[\frac{\text{exp}(\sigma_w(v,x_{wi})+\tau_i(v,x_{wi}))}{\underset{c}{\sum}\text{exp}(\sigma_w(v,c)+\tau_i(v,c))}\Big]- \alpha\Omega^*(\sigma)-\beta\Psi^*(\tau)
+\end{split}
+\end{equation}
+\]</span></p>
+<p>On cherche à calculer <span class="math inline">\(\frac{\partial F}{\partial \sigma_w(v,c)}\)</span> et <span class="math inline">\(\frac{\partial F}{\partial \tau_i(v,c)}\)</span>. Commençons d’abord par dériver par rapport à <span class="math inline">\(\sigma_w(v,c)\)</span> et nous verrons que c’est le même calcul pour <span class="math inline">\(\tau_i(v,c)\)</span></p>
+<ul>
+<li><p><span class="math inline">\(\text{log}\big(\frac{u}{v}\big)'= \frac{u'v-v'u}{uv}\)</span></p>
+<p>Posons <span class="math inline">\(u=\text{exp}(\sigma_w(v,c)+\tau_i(v,c))\)</span> et <span class="math inline">\(v=\underset{c}{\sum}\text{exp}(\sigma_w(v,c)+\tau_i(v,c))\)</span></p>
+<p>On a alors <span class="math inline">\(u'=\text{exp}(\sigma_w(v,c)+\tau_i(v,c))\)</span> et <span class="math inline">\(v'=\text{exp}(\sigma_w(v,c)+\tau_i(v,c))\)</span></p>
+<p>On obtient alors : <span class="math display">\[
+\begin{equation}
+\begin{split}
+\text{log}\Big(\frac{u}{v}\Big)'&amp;=\frac{\text{exp}(\sigma_w(v,c)+\tau_i(v,c))\underset{c}{\sum}\text{exp}(\sigma_w(v,c)+\tau_i(v,c))-\text{exp}(\sigma_w(v,c)+\tau_i(v,c))^2}{\text{exp}(\sigma_w(v,c)+\tau_i(v,c))\underset{c}{\sum}\text{exp}(\sigma_w(v,c)+\tau_i(v,c))}\\
+&amp;=1 - \frac{\text{exp}(\sigma_w(v,c)+\tau_i(v,c))}{\underset{c}{\sum}\text{exp}(\sigma_w(v,c)+\tau_i(v,c))}
+\end{split}
+\end{equation}
+\]</span></p>
+<p>Dans notre cas, on a <span class="math inline">\(x_{wi}=c\)</span> donc l’égalité ci-dessus est vraie si <span class="math inline">\(x_{wi}=c\)</span>, on obtient alors</p>
+<p><span class="math display">\[
+\text{log}\Big(\frac{u}{v}\Big)=\mathbb{1}(x_{wi}=c) - \frac{\text{exp}(\sigma_w(v,c)+\tau_i(v,c))}{\underset{c}{\sum}\text{exp}(\sigma_w(v,c)+\tau_i(v,c))}
+\]</span></p></li>
+<li><p><span class="math inline">\((uv)''=u'v+v'u\)</span></p>
+<p>Posons <span class="math inline">\(u=Q(Y_i=v)\)</span> et <span class="math inline">\(v=\text{log}\Big[\frac{\text{exp}(\sigma_w(v,x_{wi})+\tau_i(v,x_{wi}))}{\underset{c}{\sum}\text{exp}(\sigma_w(v,c)+\tau_i(v,c))}\Big]\)</span></p>
+<p>Donc : <span class="math inline">\(u'=0\)</span> et <span class="math inline">\(v'\)</span> a été calculé précédemment</p>
+<p>On obtient ainsi:</p>
+<p><span class="math display">\[(uv)'=Q(Y_i=v)\Big(\mathbb{1}(x_{wi}=c) - \frac{\text{exp}(\sigma_w(v,c)+\tau_i(v,c))}{\underset{c}{\sum}\text{exp}(\sigma_w(v,c)+\tau_i(v,c))}\Big)\]</span></p></li>
+<li><p>Pour <span class="math inline">\(\alpha\frac{1}{2}\underset{w}{\sum}\underset{v,c}{\sum}\big[\sigma_w(v,c)\big]^2\)</span> on obtient <span class="math inline">\(\alpha\sigma_w(v,c)\)</span> car on dérive par rapport à <span class="math inline">\(\sigma_w(v,c)\)</span> et donc la somme est nulle sauf pour les indices par lesquels on dérive et <span class="math inline">\(\Big(\beta\frac{1}{2}\underset{i}{\sum}\underset{v,c}{\sum}\big[\tau_i(v,c)\big]^2\Big)'=0\)</span></p></li>
+<li><p>Finalement nous obtenons la dérivée suivante :</p></li>
+</ul>
+<p><span class="math display">\[
+\frac{\partial F}{\partial \sigma_w(v,c)} = \sum_i Q(Y_i=v)[\mathbb{1}(x_{wi}=c)-P(X_{wi}=c|Y_i=v)]-\alpha\sigma_w(v,c)
+\]</span></p>
+<p>Les calculs sont les mêmes pour le gradient de <span class="math inline">\(F\)</span> par rapport à <span class="math inline">\(\tau_i(v,c)\)</span> et on obtient donc bien le résultat suivant :</p>
+<p><span class="math display">\[
+\frac{\partial F}{\partial \tau_i(v,c)} = \sum_w Q(Y_i=v)[\mathbb{1}(x_{wi}=c)-P(X_{wi}=c|Y_i=v)]-\beta\tau_i(v,c)
+\]</span></p>
+</section>
+</section>
+<section id="références" class="level2">
+
+<!-- -->
+
+
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">Références</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-peerannot" class="csl-entry" role="listitem">
+Lefort, Tanguy. n.d. <span>“Peerannot.”</span> <a href="https://tanglef.github.io" class="uri">https://tanglef.github.io</a>.
+</div>
+<div id="ref-bluebirds" class="csl-entry" role="listitem">
+Welinder, P. n.d. <span>“Bluebirds.”</span> <a href="https://github.com/welinder/cubam.git" class="uri">https://github.com/welinder/cubam.git</a>.
+</div>
+<div id="ref-zhou2015regularized" class="csl-entry" role="listitem">
+Zhou, Dengyong, Qiang Liu, John C. Platt, Christopher Meek, and Nihar B. Shah. 2015. <span>“Regularized Minimax Conditional Entropy for Crowdsourcing.”</span> <a href="https://arxiv.org/abs/1503.07240">https://arxiv.org/abs/1503.07240</a>.
+</div>
+</div></section></div></main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb7" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Minimax de l'entropie conditionnelle régularisée pour le crowdsourcing"</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="an">title-block-banner:</span><span class="co"> true</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span><span class="co"> </span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co">  html:   </span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: true</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co">    theme: minty</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="an">toc:</span><span class="co"> true</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="an">toc-depth:</span><span class="co"> 3</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="an">toc-title:</span><span class="co"> "Sommaire"</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="an">bibliography:</span><span class="co"> biblio.bib</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="co">  - name: Anne Bernard</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> 27/07/2023</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a><span class="fu">## Introduction &lt;a name="Introduction"&gt;&lt;/a&gt;</span></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a><span class="dv">&amp;nbsp;&amp;nbsp;&amp;nbsp;</span> Dans ce rapport, nous allons étudier l'article *Regularized Minimax Conditional Entropy for Crowdsourcing* <span class="co">[</span><span class="ot">@zhou2015regularized</span><span class="co">]</span>. Nous allons reprendre certaines parties de leur document qui explique déjà très bien pourquoi la recherche de cette méthode est utile. </span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a><span class="dv">&amp;nbsp;&amp;nbsp;&amp;nbsp;</span> Le crowdsourcing présume qu'une foule peut résoudre des problèmes ou accomplir des tâches mieux qu'un individu ou un groupe d'individus avec diverses significations de "mieux" telles que plus rapidement, plus efficacement ou simplement être capable de résoudre tout le problème. </span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a><span class="dv">&amp;nbsp;&amp;nbsp;&amp;nbsp;</span> Ces dernières années les services de crowdsourcing ont émergés et les coûts sont devenus de plus en plus moindre. Donc il était facile d'obtenir énormément de données étiquetées à moindre coût. Cependant, les étiquettes ne sont pas toujours de bonnes qualités car les travailleurs ne font pas un travail parfait, parfois par simple manque d'expertise. Alors pour palier à ce problème, plusieurs personnes étiquettent les mêmes items et bien souvent l'étiquette gardée est celle choisie par la majorité. Malheureusement, tous les travailleurs ne sont pas réellement égaux car certains sont plus capables que d'autres et donc le choix à la majorité ne reflète pas forcément la vérité puisque quelques votes seront plus fiables que d'autres. C'est alors que Dawid et Skene ont proposé un modèle permettant de remédier à ce problème. </span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>Cependant cette méthode a ses limites et nous allons voir lesquelles.</span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a><span class="fu">## Dawid et Skene &lt;a name="Dawid et Skene"&gt;&lt;/a&gt;</span></span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a><span class="dv">&amp;nbsp;&amp;nbsp;&amp;nbsp;</span> Le modèle d'aggregation de Dawid et Skene est un modèle probabiliste qui paramètre le niveau d'expertise des travailleurs avec des matrices de confusions.</span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a><span class="dv">&amp;nbsp;&amp;nbsp;&amp;nbsp;</span> On considère un système de crowdsourcing avec des items à classifier par des travailleurs. Chaque travailleur possède une matrice de confusion, il s'agit d'une matrice traduisant la probabilité qu'un travailleur mette tel ou tel item dans telle ou telle classe. Les éléments qui ne sont pas sur la diagonale représentent alors les probabilités que le travailleur n'étiquète pas comme il faut un item. Tandis que ceux présents sur la diagonale représente sa précision à être juste pour chaque classe, c’est-à-dire par exemple la probabilité qu’il a de mettre l’image dans la classe "chat" s’il s’agit bien d’un chat. </span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>On note $\sigma_w$ la matrice de confusion (matrice d'erreur) de taille $n_{classes} \times n_{classes}$ , $Y_i$ la vraie étiquette de l'item $i$ et $X_{wi}$ la classe que le travailleur $w$ a attribué à l'item $i$. $p$ est le vecteur de probabilité des classes à priori. On a $P(X_{wi}=c)=p<span class="co">[</span><span class="ot">c</span><span class="co">]</span>$. La relation entre ces paramètres est représentée par le modèle suivant : </span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;center&gt;&lt;img</span> <span class="er">src</span><span class="ot">=</span><span class="st">"schema1.png"</span> <span class="er">width</span><span class="ot">=</span><span class="st">"500"</span><span class="kw">&gt;</span></span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a><span class="dv">&amp;nbsp;&amp;nbsp;&amp;nbsp;</span> Dans cette méthode, la performance d’un travailleur (la matrice de confusion) reste la même pour tous les items d’une même classe. Ce n’est pas vrai pour tout car parfois un item est plus dur qu’un autre à étiqueter et donc il est plus probable qu’un travailleur se trompe pour cet item. Et parfois peu importe qui étiquète, l’item peut avoir plus tendance à être rangé dans une classe que dans une autre. C'est pourquoi la méthode du minimax de l'entropie conditionnelle régularisée a été développée pour prendre en compte ce dernier argument. </span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a><span class="fu">## Notation et principe du minimax &lt;a name="Notation et principe du minimax"&gt;&lt;/a&gt;</span></span>
+<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a><span class="dv">&amp;nbsp;&amp;nbsp;&amp;nbsp;</span> Posons tout d'abord les notations. Soit un groupe de travailleur où chaque travailleur est indexé par $w$ (worker), un ensemble d'items indexés par $i$ (item) et un nombre de classes indexées par $c$ ou $v$. On utilisera $v$ dans le cas où il s'agit de la vraie classe associée à l'item. Soit $x_{wi}$ l'étiquette observée que le travailleur $w$ a assigné à l'item $i$ et $X_{wi}$ la variable aléatoire correspondante. </span>
+<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a><span class="dv">&amp;nbsp;&amp;nbsp;&amp;nbsp;</span> On note $Q(Y_i = v)$ la vraie probabilité non-observée que l'item $i$ soit dans la classe $v$. On dit que l'étiquette est déterministe lorsque $Q(Y_i = v)=1$ et $Q(Y_i = c)=0$ pour tout $c\neq v$. On note $P(X_{wi}=c|Y_i=v)$ la probabilité que le traveilleur $w$ étiquette l'item $i$ dans la classe $c$ alors que la vraie classe est $v$. On cherche à estimer les vraies étiquettes non-observées à partir des résultats trompeurs. </span>
+<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a><span class="fu">### Forme Primale &lt;a name="Forme Primale"&gt;&lt;/a&gt;</span></span>
+<span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-52"><a href="#cb7-52" aria-hidden="true" tabindex="-1"></a><span class="dv">&amp;nbsp;&amp;nbsp;&amp;nbsp;</span> La première approche développée dans le papier est la suivante : on construit 2 tenseurs à 4 dimensions ($w, i, c, v$). Le premier tenseur est un tenseur de confusion empirique, c'est-à-dire qu'il représente la confusion observée du travailleur $w$ lorsqu'il étiquète l'item $i$ dans la classe $c$ au lieu de $v$. Le deuxième tenseur est un tenseur de confusion expecté, c'est-à-dire qu'il représente la confusion attendue du travailleur $w$ lorsqu'il étiquète l'item $i$ dans la classe $c$ au lieu de $v$. </span>
+<span id="cb7-53"><a href="#cb7-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a>Premier tenseur : </span>
+<span id="cb7-55"><a href="#cb7-55" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a>\hat{\phi}_{wi}(v,c)=Q(Y_i=v)\mathbb{1}(x_{wi}=c)</span>
+<span id="cb7-57"><a href="#cb7-57" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb7-58"><a href="#cb7-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-59"><a href="#cb7-59" aria-hidden="true" tabindex="-1"></a>Deuxième tenseur : </span>
+<span id="cb7-60"><a href="#cb7-60" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb7-61"><a href="#cb7-61" aria-hidden="true" tabindex="-1"></a>\phi_{wi}(v,c)=Q(Y_i=v)P(X_{wi}=c|Y_i=v)</span>
+<span id="cb7-62"><a href="#cb7-62" aria-hidden="true" tabindex="-1"></a>$$ </span>
+<span id="cb7-63"><a href="#cb7-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-64"><a href="#cb7-64" aria-hidden="true" tabindex="-1"></a>On assume que les étiquettes des items sont indépendantes. L'entropie des étiquettes observées des travailleurs conditionnée par les vraies étiquettes peut s'écrire : </span>
+<span id="cb7-65"><a href="#cb7-65" aria-hidden="true" tabindex="-1"></a>$$ H(X|Y)=-\underset{i,v}{\sum}Q(Y_i=v)\underset{w,c}{\sum}P(X_{wi}=c|Y_i=v)\,\text{log}\,P(X_{wi}=c|Y_i=v)$$</span>
+<span id="cb7-66"><a href="#cb7-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-67"><a href="#cb7-67" aria-hidden="true" tabindex="-1"></a>On considère d'abord simplement le cas où $Q$ est donné et l'on cherche à estimer $P$. Supposons que l'on connait la distribution de $Q$, on cherche à estimer $P$ qui génère les étiquettes des travailleurs. Pour ça on cherche à maximiser l'entropie conditionnelle : $$ \underset{P}{\text{max}}\,\,\, H(X|Y)$$ avec les contraintes des travailleurs et des items suivantes :</span>
+<span id="cb7-68"><a href="#cb7-68" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb7-69"><a href="#cb7-69" aria-hidden="true" tabindex="-1"></a>\underset{i}{\sum} \big<span class="co">[</span><span class="ot">\phi_{wi}(v,c)-\hat{\phi}_{wi}(v,c)\big</span><span class="co">]</span>=0, \,\, \forall w,c,v  </span>
+<span id="cb7-70"><a href="#cb7-70" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb7-71"><a href="#cb7-71" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb7-72"><a href="#cb7-72" aria-hidden="true" tabindex="-1"></a>\underset{w}{\sum} \big<span class="co">[</span><span class="ot">\phi_{wi}(v,c)-\hat{\phi}_{wi}(v,c)\big</span><span class="co">]</span>=0, \,\, \forall i,c,v</span>
+<span id="cb7-73"><a href="#cb7-73" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb7-74"><a href="#cb7-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-75"><a href="#cb7-75" aria-hidden="true" tabindex="-1"></a>et également les contraintes de probabilités : </span>
+<span id="cb7-76"><a href="#cb7-76" aria-hidden="true" tabindex="-1"></a>$$\underset{c}{\sum}P(X_{wi}=c|Y_i=v)=1, \,\, \forall w,i,v, $$</span>
+<span id="cb7-77"><a href="#cb7-77" aria-hidden="true" tabindex="-1"></a>$$\underset{v}{\sum}Q(Y_i=v)\geq 0,\,\, \forall i, $$</span>
+<span id="cb7-78"><a href="#cb7-78" aria-hidden="true" tabindex="-1"></a>$$Q(Y_i=v)\geq0, \,\, \forall i,v$$</span>
+<span id="cb7-79"><a href="#cb7-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-80"><a href="#cb7-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-81"><a href="#cb7-81" aria-hidden="true" tabindex="-1"></a><span class="dv">&amp;nbsp;&amp;nbsp;&amp;nbsp;</span> Dans le cas où on ne connait pas les distributions $P$ et $Q$, on souhaite estimer conjointement les deux par le minimax : $$ \underset{Q}{\text{min}}\,\, \underset{P}{\text{max}} \,\,\, H(X|Y)$$ Les contraintes sont les mêmes que précédemment. L'entropie est une sorte de mesure de l'incertain donc minimiser le maximum de l'entropie conditionnelle signifie qu'étant donné les vraies étiquettes, celles donnés par les travailleurs sont les moins aléatoires.</span>
+<span id="cb7-82"><a href="#cb7-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-83"><a href="#cb7-83" aria-hidden="true" tabindex="-1"></a><span class="fu">### Forme Duale &lt;a name="Forme Duale"&gt;&lt;/a&gt;</span></span>
+<span id="cb7-84"><a href="#cb7-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-85"><a href="#cb7-85" aria-hidden="true" tabindex="-1"></a><span class="dv">&amp;nbsp;&amp;nbsp;&amp;nbsp;</span> Le problème peut également s'étendre sous forme duale. Le Lagrangien du problème de maximisation précédent peut être écrit comme suit : </span>
+<span id="cb7-86"><a href="#cb7-86" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb7-87"><a href="#cb7-87" aria-hidden="true" tabindex="-1"></a>L = H(X|Y)+L_\sigma+L_\tau+L_\lambda \,\,\,\,\, \text{avec}</span>
+<span id="cb7-88"><a href="#cb7-88" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb7-89"><a href="#cb7-89" aria-hidden="true" tabindex="-1"></a>$$L_\sigma = \underset{w,v,c}{\sum}\sigma_w(v,c)\underset{i}{\sum}\Big<span class="co">[</span><span class="ot">\phi_{wi}(v,c)-\hat{\phi}_{wi}(v,c)\Big</span><span class="co">]</span>,$$</span>
+<span id="cb7-90"><a href="#cb7-90" aria-hidden="true" tabindex="-1"></a>$$L_\tau = \underset{i,v,c}{\sum}\tau_i(v,c)\underset{w}{\sum}\Big<span class="co">[</span><span class="ot">\phi_{wi}(v,c)-\hat{\phi}_{wi}(v,c)\Big</span><span class="co">]</span>,$$</span>
+<span id="cb7-91"><a href="#cb7-91" aria-hidden="true" tabindex="-1"></a>$$L_\lambda = \underset{w,i,v}{\sum}\lambda_{wiv}\Big<span class="co">[</span><span class="ot">\underset{k}{\sum}P(X_{wi}=c|Y_i=v)-1\Big</span><span class="co">]</span>$$</span>
+<span id="cb7-92"><a href="#cb7-92" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-93"><a href="#cb7-93" aria-hidden="true" tabindex="-1"></a>\noindent où $\sigma_w(v,c)$,$\tau_i(v,c)$ et $\lambda_{wiv}$ sont les multiplicateurs de Lagrange. Par les conditions KKT on a que $$\frac{\partial L}{\partial P(X_{wi}=c|Y_i=v)}=0$$ ce qui implique :</span>
+<span id="cb7-94"><a href="#cb7-94" aria-hidden="true" tabindex="-1"></a>$$\text{log}\,P(X_{wi}=c|Y_i=v)=\lambda_{wiv}-1+\sigma_w(v,c)+\tau_i(v,c)$$</span>
+<span id="cb7-95"><a href="#cb7-95" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-96"><a href="#cb7-96" aria-hidden="true" tabindex="-1"></a>\noindent On obtient ensuite avec les contraintes : $$P(X_{wi}=c|Y_i=v)=\frac{1}{Z_{wi}}\,\text{exp}<span class="co">[</span><span class="ot">\sigma_w(v,c)+\tau_i(v,c)</span><span class="co">]</span>$$</span>
+<span id="cb7-97"><a href="#cb7-97" aria-hidden="true" tabindex="-1"></a>où $Z_{wi}=\underset{c}{\sum}\text{exp}<span class="co">[</span><span class="ot">\sigma_w(v,c)+\tau_i(v,c)</span><span class="co">]</span>$ est le facteur de normalisation.</span>
+<span id="cb7-98"><a href="#cb7-98" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-99"><a href="#cb7-99" aria-hidden="true" tabindex="-1"></a><span class="dv">&amp;nbsp;&amp;nbsp;&amp;nbsp;</span> La matrice $<span class="co">[</span><span class="ot">\sigma_w(v,c)</span><span class="co">]</span>$ peut être considérée comme la mesure de l'habilité  du travailleur $w$. La $(v,c)$-ième entrée mesure la probabilité que le travailleur $w$ étiquète un item choisi aléatoirement dans la classe $c$ au lieu de la classe $v$. Et $<span class="co">[</span><span class="ot">\tau_i(v,c)</span><span class="co">]</span>$ peut être considérée comme la mesure de la difficulté d'un item $i$. La $(v,c)$-ième entrée de la matrice mesure  la probabilité qu'un item $i$ de la classe $v$ soit étiqueté dans la classe $c$ par un travailleur choisi aléatoirement. </span>
+<span id="cb7-100"><a href="#cb7-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-101"><a href="#cb7-101" aria-hidden="true" tabindex="-1"></a>On obtient alors la forme dual du problème de minimax : $$ \underset{\sigma,\tau,Q}{\text{max}}\,\,\,\,\,\underset{i,v}{\sum}Q(Y_i=v)\underset{w}{\sum}\,\text{log}\,P(X_{wi}=x_{wi}|Y_i=v)$$</span>
+<span id="cb7-102"><a href="#cb7-102" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-103"><a href="#cb7-103" aria-hidden="true" tabindex="-1"></a>Pour que ce soit optimal, il faut que la vraie étiquette soit déterministe.</span>
+<span id="cb7-104"><a href="#cb7-104" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-105"><a href="#cb7-105" aria-hidden="true" tabindex="-1"></a><span class="fu">### Divergence de Kullback-Leibler &lt;a name="Divergence de Kullback-Leibler"&gt;&lt;/a&gt;</span></span>
+<span id="cb7-106"><a href="#cb7-106" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-107"><a href="#cb7-107" aria-hidden="true" tabindex="-1"></a><span class="dv">&amp;nbsp;&amp;nbsp;&amp;nbsp;</span> Soit $P$ et $Q$, deux distributions de l'espace produit $X\times Y$. On étend cette distribution $Q$ défini par $Q(X_{wi}=x_{wi})=1$, et $Q(Y)$ reste la même. On étend la distribution de $P$ avec $P(X,Y)=\underset{wi}{\prod}P(X_{wi}|Y_i)P(Y_i)$ où $P(X_{wi}|Y_i)$ est le même que précédemment et $P(Y)$ est une distribution uniforme sur toutes les classes possibles. </span>
+<span id="cb7-108"><a href="#cb7-108" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-109"><a href="#cb7-109" aria-hidden="true" tabindex="-1"></a>::: {.callout-important icon=false}</span>
+<span id="cb7-110"><a href="#cb7-110" aria-hidden="true" tabindex="-1"></a><span class="fu">## Théorème </span></span>
+<span id="cb7-111"><a href="#cb7-111" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-112"><a href="#cb7-112" aria-hidden="true" tabindex="-1"></a>Quand les vraies étiquettes sont déterministes, minimiser la divergence de Kullback Leibler de $Q$ à $P$, qui est, $$\underset{P,Q}{\text{min}} \Big<span class="sc">\{</span>D_{\text{KL}}(Q||P)\,\,=\,\,\underset{X,Y}{\sum}Q(X,Y)\,\text{log}\,\frac{Q(X,Y)}{P(X,Y)} \Big<span class="sc">\}</span>$$</span>
+<span id="cb7-113"><a href="#cb7-113" aria-hidden="true" tabindex="-1"></a>est équivalent au problème du minimax d'avant. </span>
+<span id="cb7-114"><a href="#cb7-114" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-115"><a href="#cb7-115" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb7-116"><a href="#cb7-116" aria-hidden="true" tabindex="-1"></a><span class="dv">&amp;nbsp;&amp;nbsp;&amp;nbsp;</span> On ne présentera pas la preuve dans ce document elle se déroule en montrant que :</span>
+<span id="cb7-117"><a href="#cb7-117" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-118"><a href="#cb7-118" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb7-119"><a href="#cb7-119" aria-hidden="true" tabindex="-1"></a>\begin{equation}</span>
+<span id="cb7-120"><a href="#cb7-120" aria-hidden="true" tabindex="-1"></a>\begin{split}</span>
+<span id="cb7-121"><a href="#cb7-121" aria-hidden="true" tabindex="-1"></a>D_{KL}(Q||P)\,\, = \,\, &amp;-\underset{i,v}{\sum}Q(Y_i=v)\underset{w,c}{\sum}P(X_{wi}=c | Y_i=v)\text{log}P(X_{wi}=c|Y_i=v)+ <span class="sc">\\</span></span>
+<span id="cb7-122"><a href="#cb7-122" aria-hidden="true" tabindex="-1"></a>&amp; \underset{Y}{\sum}Q(Y\text{log}Q(Y)-\text{log}P(Y))</span>
+<span id="cb7-123"><a href="#cb7-123" aria-hidden="true" tabindex="-1"></a>\end{split}</span>
+<span id="cb7-124"><a href="#cb7-124" aria-hidden="true" tabindex="-1"></a>\end{equation}</span>
+<span id="cb7-125"><a href="#cb7-125" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb7-126"><a href="#cb7-126" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-127"><a href="#cb7-127" aria-hidden="true" tabindex="-1"></a>Par la définition de $P(X,Y)$, $P(Y)$ est constant. De plus, lorsque les vraies étiquettes sont déterministes on a que $\underset{Y}{\sum}Q(Y)\text{log}Q(Y)=0$, ce qui conclut la preuve. </span>
+<span id="cb7-128"><a href="#cb7-128" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-129"><a href="#cb7-129" aria-hidden="true" tabindex="-1"></a><span class="fu">### Minimax de l'entropie conditionnelle régularisée &lt;a name="Minimax de l'entropie conditionnelle régularisée"&gt;&lt;/a&gt;</span></span>
+<span id="cb7-130"><a href="#cb7-130" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-131"><a href="#cb7-131" aria-hidden="true" tabindex="-1"></a><span class="dv">&amp;nbsp;&amp;nbsp;&amp;nbsp;</span> Il faut régulariser la méthode du minimax de l'entropie conditionnelle pour deux raisons principales : \newline</span>
+<span id="cb7-132"><a href="#cb7-132" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-133"><a href="#cb7-133" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Dans la méthode du minimax décrite avant, on peut seulement générer des étiquettes déterministes alors qu'en pratique les étiquettes probabilistes sont généralement plus utiles. Lorsque la répartition des étiquettes pour un item est presque uniforme sur plusieurs classes, on peut demander plus d'étiquettes pour l'item ou transmettre l'item à un expert externe. \newline</span>
+<span id="cb7-134"><a href="#cb7-134" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-135"><a href="#cb7-135" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Parfois, le nombre de données n'est pas suffisant pour avoir une distribution continue, donc on peut se retrouver avec des uniformes ou des dirac et donc ce ne sera pas représentatif de la vérité, en tout cas on ne peut pas en être sûre. </span>
+<span id="cb7-136"><a href="#cb7-136" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-137"><a href="#cb7-137" aria-hidden="true" tabindex="-1"></a>Il faudrait alors pénaliser les larges fluctuations, et considérer une régularisation d'entropie sur la vraie distribution inconnue d'étiquettes. Formellement, on régularise de la manière qui suit.</span>
+<span id="cb7-138"><a href="#cb7-138" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-139"><a href="#cb7-139" aria-hidden="true" tabindex="-1"></a>L'entropie de la vraie distribution des étiquettes s'écrit : $$H(Y)\,=\,-\,\underset{i,v}{\sum}\,Q(Y_i=v)\text{log}Q(Y_i=v)$$</span>
+<span id="cb7-140"><a href="#cb7-140" aria-hidden="true" tabindex="-1"></a>Pour estimer les vraies étiquettes, on considère : $$\underset{Q}{\text{min}}\,\underset{P}{\text{max}} \, \, H(X|Y)-H(Y)-\frac{1}{\alpha}\Omega(\xi)-\frac{1}{\beta}\Psi(\zeta)$$</span>
+<span id="cb7-141"><a href="#cb7-141" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-142"><a href="#cb7-142" aria-hidden="true" tabindex="-1"></a>avec les contraintes sur les travailleurs et les items suivantes : </span>
+<span id="cb7-143"><a href="#cb7-143" aria-hidden="true" tabindex="-1"></a>$$\underset{i}{\sum}\,\big<span class="co">[</span><span class="ot">\phi_{wi}(v,c)-\hat{\phi}_{wi}(v,c)\big</span><span class="co">]</span> \, = \, \xi_w(v,c), \,\,\, \forall w,</span>
+<span id="cb7-144"><a href="#cb7-144" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb7-145"><a href="#cb7-145" aria-hidden="true" tabindex="-1"></a>$$\underset{w}{\sum}\,\big<span class="co">[</span><span class="ot">\phi_{wi}(v,c)-\hat{\phi}_{wi}(v,c)\big</span><span class="co">]</span> \, = \, \zeta_i(v,c), \,\,\, \forall i.</span>
+<span id="cb7-146"><a href="#cb7-146" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb7-147"><a href="#cb7-147" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-148"><a href="#cb7-148" aria-hidden="true" tabindex="-1"></a>\noindent et les contraintes de probabilités précédentes. Les fonctions de régularisation  $\Omega$ et $\Psi$ sont choisies par :</span>
+<span id="cb7-149"><a href="#cb7-149" aria-hidden="true" tabindex="-1"></a>$$\Omega(\xi)=\frac{1}{2}\underset{w}{\sum}\underset{v,c}{\sum}<span class="co">[</span><span class="ot">\xi_w(v,c)</span><span class="co">]</span>^2,</span>
+<span id="cb7-150"><a href="#cb7-150" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb7-151"><a href="#cb7-151" aria-hidden="true" tabindex="-1"></a>$$\Psi(\zeta)=\frac{1}{2}\underset{i}{\sum}\underset{v,c}{\sum}<span class="co">[</span><span class="ot">\zeta_i(v,c)</span><span class="co">]</span>^2,</span>
+<span id="cb7-152"><a href="#cb7-152" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb7-153"><a href="#cb7-153" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-154"><a href="#cb7-154" aria-hidden="true" tabindex="-1"></a>Les variables $\xi_w(v,c)$ et $\zeta_i(v,c)$ modélisent les possibles fluctuations. À noter que ces variables ne sont pas nécessairement positives. Lorsqu'il y a un grand nombre d'observation, les fluctuations sont approximativement distribuées normalement (théorème centrale limite). C'est pourquoi on introduit des fonctions de régularisations pour pénaliser les fortes fluctuations. L'entropie $H(Y)$ peut être vue comme pénalisant une large déviation à la distribution uniforme. </span>
+<span id="cb7-155"><a href="#cb7-155" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-156"><a href="#cb7-156" aria-hidden="true" tabindex="-1"></a>On obtient ensuite la forme duale :</span>
+<span id="cb7-157"><a href="#cb7-157" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-158"><a href="#cb7-158" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb7-159"><a href="#cb7-159" aria-hidden="true" tabindex="-1"></a>\underset{\sigma,\tau,Q}{\text{max}} \,\,\,\, \underset{i,v}Q(Y_i=v)\,\underset{w}{\sum}\text{log}\,P(X_{wi}=x_{wi}|Y_i=v)+H(Y)-\alpha\Omega^{*}(\sigma)-\beta\Psi^{*}(\tau)</span>
+<span id="cb7-160"><a href="#cb7-160" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb7-161"><a href="#cb7-161" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-162"><a href="#cb7-162" aria-hidden="true" tabindex="-1"></a>où </span>
+<span id="cb7-163"><a href="#cb7-163" aria-hidden="true" tabindex="-1"></a>$$\Omega^{*}(\sigma)=\frac{1}{2}\underset{w}{\sum}\underset{v,c}{\sum}<span class="co">[</span><span class="ot">\sigma_w(v,c)</span><span class="co">]</span>^2,</span>
+<span id="cb7-164"><a href="#cb7-164" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb7-165"><a href="#cb7-165" aria-hidden="true" tabindex="-1"></a>$$\Psi^{*}(\tau)=\frac{1}{2}\underset{i}{\sum}\underset{v,c}{\sum}<span class="co">[</span><span class="ot">\tau_i(v,c)</span><span class="co">]</span>^2,</span>
+<span id="cb7-166"><a href="#cb7-166" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb7-167"><a href="#cb7-167" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-168"><a href="#cb7-168" aria-hidden="true" tabindex="-1"></a><span class="fu">### Principe de mesure objective &lt;a name="Principe de mesure objective"&gt;&lt;/a&gt;</span></span>
+<span id="cb7-169"><a href="#cb7-169" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-170"><a href="#cb7-170" aria-hidden="true" tabindex="-1"></a><span class="dv">&amp;nbsp;&amp;nbsp;&amp;nbsp;</span> Dans cette section, nous allons voir le principe de mesure objective qui est décrit dans le document initial afin de montrer que le modèle d'étiquetage probabiliste est une conséquence de ce principe. Le principe peut être décrit comme suit : </span>
+<span id="cb7-171"><a href="#cb7-171" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-172"><a href="#cb7-172" aria-hidden="true" tabindex="-1"></a>(@) Une comparaison de la difficulté d'étiquetage entre deux éléments doit être indépendante des travailleurs particuliers impliqués dans la comparaison ; et il devrait également être indépendant des autres éléments qui pourraient également être comparés</span>
+<span id="cb7-173"><a href="#cb7-173" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-174"><a href="#cb7-174" aria-hidden="true" tabindex="-1"></a>(@) Symétriquement, une comparaison de la capacité d'étiquetage entre deux travailleurs devrait être indépendante des éléments particuliers impliqués dans la comparaison ; et il devrait également être indépendant des autres travailleurs qui pourraient également être comparés.</span>
+<span id="cb7-175"><a href="#cb7-175" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-176"><a href="#cb7-176" aria-hidden="true" tabindex="-1"></a><span class="dv">&amp;nbsp;&amp;nbsp;&amp;nbsp;</span> On va maintenant décrire le principe mathématiquement.</span>
+<span id="cb7-177"><a href="#cb7-177" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-178"><a href="#cb7-178" aria-hidden="true" tabindex="-1"></a>On suppose que le travailleur $w$ a étiqueté les items $i$ et $i'$ dans la classe $v$. On écrit $E$ l'évènement que "un des deux items est étiqueté $c$ et l'autre $v$".</span>
+<span id="cb7-179"><a href="#cb7-179" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-180"><a href="#cb7-180" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb7-181"><a href="#cb7-181" aria-hidden="true" tabindex="-1"></a>E = \Big<span class="sc">\{</span>\mathbb{1}(X_{wi=c})+\mathbb{1}(X_{wi'}=c)=1\, , \, \mathbb{1}(X_{wi=v})+\mathbb{1}(X_{wi'}=v)=1\Big<span class="sc">\}</span></span>
+<span id="cb7-182"><a href="#cb7-182" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb7-183"><a href="#cb7-183" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-184"><a href="#cb7-184" aria-hidden="true" tabindex="-1"></a>On écrit $A$ l'évènement que l'item $i$ soit étiqueté en tant que $c$ et $i'$ en tant que $v$.</span>
+<span id="cb7-185"><a href="#cb7-185" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-186"><a href="#cb7-186" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb7-187"><a href="#cb7-187" aria-hidden="true" tabindex="-1"></a>A = \Big<span class="sc">\{</span>X_{wi}=c,X_{wi'}=v\Big<span class="sc">\}</span></span>
+<span id="cb7-188"><a href="#cb7-188" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb7-189"><a href="#cb7-189" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-190"><a href="#cb7-190" aria-hidden="true" tabindex="-1"></a>On formule maintenant l'exigence 1. du principe. $P(A|E)$ est indépendant du travailleur $w$. On note : </span>
+<span id="cb7-191"><a href="#cb7-191" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb7-192"><a href="#cb7-192" aria-hidden="true" tabindex="-1"></a>P(A|E)\,=\,\frac{P(X_{wi}=c|Y_i=v)P(X_{wi'}=v|Y_{i'}=v)}{P(X_{wi}=c|Y_i=v)P(X_{wi'}=v|Y_{i'}=v)+P(X_{wi}=v|Y_i=v)P(X_{wi'}=c|Y_{i'}=v)}</span>
+<span id="cb7-193"><a href="#cb7-193" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb7-194"><a href="#cb7-194" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-195"><a href="#cb7-195" aria-hidden="true" tabindex="-1"></a>Ainsi $P(A|E)$ est indépendant du travailleur $w$ si et seulement si :</span>
+<span id="cb7-196"><a href="#cb7-196" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-197"><a href="#cb7-197" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb7-198"><a href="#cb7-198" aria-hidden="true" tabindex="-1"></a>\frac{P(X_{wi}=c|Y_i=v)P(X_{wi'}=v|Y_{i'}=v)}{P(X_{wi}=v|Y_i=v)P(X_{wi'}=c|Y_{i'}=v)}</span>
+<span id="cb7-199"><a href="#cb7-199" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb7-200"><a href="#cb7-200" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-201"><a href="#cb7-201" aria-hidden="true" tabindex="-1"></a>est indépendant du traveilleur $w$. En d'autres termes, en prenant un autre travailleur $w'$ arbitrairement, on devrait avoir : </span>
+<span id="cb7-202"><a href="#cb7-202" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-203"><a href="#cb7-203" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb7-204"><a href="#cb7-204" aria-hidden="true" tabindex="-1"></a>\frac{P(X_{wi}=c|Y_i=v)P(X_{wi'}=v|Y_{i'}=v)}{P(X_{wi}=v|Y_i=v)P(X_{wi'}=c|Y_{i'}=v)}=\frac{P(X_{w'i}=c|Y_i=v)P(X_{w'i'}=v|Y_{i'}=v)}{P(X_{w'i}=v|Y_i=v)P(X_{w'i'}=c|Y_{i'}=v)}</span>
+<span id="cb7-205"><a href="#cb7-205" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb7-206"><a href="#cb7-206" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-207"><a href="#cb7-207" aria-hidden="true" tabindex="-1"></a>Sans perte de généralite, on choisit $w'=0$ et $i'=0$ comme références fixes. Donc, </span>
+<span id="cb7-208"><a href="#cb7-208" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-209"><a href="#cb7-209" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb7-210"><a href="#cb7-210" aria-hidden="true" tabindex="-1"></a>\frac{P(X_{wi}=c|Y_i=v)}{P(X_{wi}=v|Y_i=v)}=\frac{P(X_{w0}=c|Y_0=v)P(X_{0i}=v|Y_{i}=v)}{P(X_{w0}=v|Y_0=v)P(X_{0i}=c|Y_{i}=v)}</span>
+<span id="cb7-211"><a href="#cb7-211" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb7-212"><a href="#cb7-212" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-213"><a href="#cb7-213" aria-hidden="true" tabindex="-1"></a>On peut alors écrire : </span>
+<span id="cb7-214"><a href="#cb7-214" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-215"><a href="#cb7-215" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb7-216"><a href="#cb7-216" aria-hidden="true" tabindex="-1"></a>P(X_{w0}=c|Y_0=v)=\text{exp}<span class="co">[</span><span class="ot">\sigma_w(v,c)</span><span class="co">]</span>\,,\,\,\, P(X_{0i}=c|Y_i=v)=\text{exp}<span class="co">[</span><span class="ot">\tau_i(v,c)</span><span class="co">]</span></span>
+<span id="cb7-217"><a href="#cb7-217" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb7-218"><a href="#cb7-218" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-219"><a href="#cb7-219" aria-hidden="true" tabindex="-1"></a>Le modèle d'étiquetage probabiliste suit immédiatement. Il est facile de vérifier qu'en raison de la symétrie entre la difficulté de l'item et la capacité du travailleur, nous pouvons formuler l'exigence 2. pour obtenir le même résultat. Ainsi, les deux exigences sont en fait redondantes.</span>
+<span id="cb7-220"><a href="#cb7-220" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-221"><a href="#cb7-221" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-222"><a href="#cb7-222" aria-hidden="true" tabindex="-1"></a><span class="fu">## Implementation &lt;a name="Implementation"&gt;&lt;/a&gt;</span></span>
+<span id="cb7-223"><a href="#cb7-223" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-224"><a href="#cb7-224" aria-hidden="true" tabindex="-1"></a><span class="fu">### Description de l'algorithme &lt;a name="Description de l'algorithme"&gt;&lt;/a&gt;</span></span>
+<span id="cb7-225"><a href="#cb7-225" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-226"><a href="#cb7-226" aria-hidden="true" tabindex="-1"></a>::: {.callout-note icon=false}</span>
+<span id="cb7-227"><a href="#cb7-227" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-228"><a href="#cb7-228" aria-hidden="true" tabindex="-1"></a><span class="fu">## Algorithme : Minimax de l'entropie conditionnelle régularisée pour le crowdsourcing</span></span>
+<span id="cb7-229"><a href="#cb7-229" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-230"><a href="#cb7-230" aria-hidden="true" tabindex="-1"></a>$\bf{input:}$ $<span class="sc">\{</span>x_{wi}<span class="sc">\}</span>,\alpha, \beta$</span>
+<span id="cb7-231"><a href="#cb7-231" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-232"><a href="#cb7-232" aria-hidden="true" tabindex="-1"></a>$\bf{initialize:}$ </span>
+<span id="cb7-233"><a href="#cb7-233" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb7-234"><a href="#cb7-234" aria-hidden="true" tabindex="-1"></a>Q(Y_i=v) \propto  \underset{w}{\sum}\mathbb{1}(x_{wi}=v)</span>
+<span id="cb7-235"><a href="#cb7-235" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb7-236"><a href="#cb7-236" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-237"><a href="#cb7-237" aria-hidden="true" tabindex="-1"></a>$\bf{repeat:}$</span>
+<span id="cb7-238"><a href="#cb7-238" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb7-239"><a href="#cb7-239" aria-hidden="true" tabindex="-1"></a><span class="sc">\{</span>\sigma, \tau<span class="sc">\}</span> \, = \, \text{arg}\, \underset{\sigma, \tau}{\text{max}}\, \underset{w,i,v}{\sum} Q(Y_i=v)\text{log}\, P(X_{wi}=x_{wi}|Y_i=v)-\alpha\Omega^{*}(\sigma)-\beta\Psi^{*}(\tau) </span>
+<span id="cb7-240"><a href="#cb7-240" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb7-241"><a href="#cb7-241" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb7-242"><a href="#cb7-242" aria-hidden="true" tabindex="-1"></a>Q(Y_i=v)\propto \underset{w}{\prod}P(X_{wi}=x_{wi}|Y_i=v)</span>
+<span id="cb7-243"><a href="#cb7-243" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb7-244"><a href="#cb7-244" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-245"><a href="#cb7-245" aria-hidden="true" tabindex="-1"></a>$\bf{output:}$ $Q$</span>
+<span id="cb7-246"><a href="#cb7-246" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb7-247"><a href="#cb7-247" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-248"><a href="#cb7-248" aria-hidden="true" tabindex="-1"></a><span class="dv">&amp;nbsp;&amp;nbsp;&amp;nbsp;</span> On va s'attaquer à l'implémentation de la méthode pour résoudre le problème sous forme dual. On initialise d'abord l'estimation des étiquettes par aggregation des votes dans l'équation : $$Q(Y_i=v) \propto \underset{w}{\sum}\mathbb{1}(x_{wi}=v)$$</span>
+<span id="cb7-249"><a href="#cb7-249" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-250"><a href="#cb7-250" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-251"><a href="#cb7-251" aria-hidden="true" tabindex="-1"></a>Ensuite, pour chaque itération, étant donné les estimations actuelles des étiquettes, mettre à jour l'estimation des matrices de confusion des travailleurs et des items en résolvant le problème d'optimisation : </span>
+<span id="cb7-252"><a href="#cb7-252" aria-hidden="true" tabindex="-1"></a>$$<span class="sc">\{</span>\sigma, \tau<span class="sc">\}</span> \, = \, \text{arg}\, \underset{\sigma, \tau}{\text{max}}\, \underset{w,i,v}{\sum} Q(Y_i=v)\text{log}\, P(X_{wi}=x_{wi}|Y_i=v)-\alpha\Omega^{*}(\sigma)-\beta\Psi^{*}(\tau) $$</span>
+<span id="cb7-253"><a href="#cb7-253" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-254"><a href="#cb7-254" aria-hidden="true" tabindex="-1"></a>et, étant donnée l'estimation actuelle des matrices de confusion des travailleurs et des items, mettre à jour les estimations des étiquettes par la formule fermée : </span>
+<span id="cb7-255"><a href="#cb7-255" aria-hidden="true" tabindex="-1"></a>$$Q(Y_i=v)\propto \underset{w}{\prod}P(X_{wi}=x_{wi}|Y_i=v)$$</span>
+<span id="cb7-256"><a href="#cb7-256" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-257"><a href="#cb7-257" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-258"><a href="#cb7-258" aria-hidden="true" tabindex="-1"></a>ce qui est la même chose qu'appliquer la règle de Bayes avec un prior uniforme. Le problème d'optimisation précédent est fortement convexe et lisse. Plusieurs algorithmes peuvent être appliqués. On va utiliser la méthode de montée de gradient. Pour des étiquettes multiclasses, les gradients sont calculés par (calcul en Annexe) :</span>
+<span id="cb7-259"><a href="#cb7-259" aria-hidden="true" tabindex="-1"></a>$$\frac{\partial F}{\partial \sigma_w(v,c)} = \sum_i Q(Y_i=v)<span class="co">[</span><span class="ot">\mathbb{1}(x_{wi}=c)-P(X_{wi}=c|Y_i=v)</span><span class="co">]</span>-\alpha\sigma_w(v,c),$$</span>
+<span id="cb7-260"><a href="#cb7-260" aria-hidden="true" tabindex="-1"></a>$$\frac{\partial F}{\partial \tau_i(v,c)} = \sum_w Q(Y_i=v)<span class="co">[</span><span class="ot">\mathbb{1}(x_{wi}=c)-P(X_{wi}=c|Y_i=v)</span><span class="co">]</span>-\beta\tau_i(v,c),$$</span>
+<span id="cb7-261"><a href="#cb7-261" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-262"><a href="#cb7-262" aria-hidden="true" tabindex="-1"></a>Concernant les valeurs de $\alpha$ et $\beta$, nous avons utilisé les formules proposées dans l'article étudié qui sont les suivantes : </span>
+<span id="cb7-263"><a href="#cb7-263" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-264"><a href="#cb7-264" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb7-265"><a href="#cb7-265" aria-hidden="true" tabindex="-1"></a>\alpha = \gamma \times (\text{nombre de classes})^2</span>
+<span id="cb7-266"><a href="#cb7-266" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb7-267"><a href="#cb7-267" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-268"><a href="#cb7-268" aria-hidden="true" tabindex="-1"></a>où $\gamma \in <span class="sc">\{</span>2^{-2}, 2^{-1}, 2^0, 2^1, 2^2<span class="sc">\}</span>$</span>
+<span id="cb7-269"><a href="#cb7-269" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb7-270"><a href="#cb7-270" aria-hidden="true" tabindex="-1"></a>\beta = \frac{\text{nombre de label par travailleur}}{\text{nombre de label par item}} \times \alpha</span>
+<span id="cb7-271"><a href="#cb7-271" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb7-272"><a href="#cb7-272" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-273"><a href="#cb7-273" aria-hidden="true" tabindex="-1"></a>Il peut exister des cas où les travailleurs ne votent pas tous pour le même nombre d'item et que chaque item ne possède pas le même nombre de label. Nous avons donc fait une moyenne. </span>
+<span id="cb7-274"><a href="#cb7-274" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-275"><a href="#cb7-275" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-276"><a href="#cb7-276" aria-hidden="true" tabindex="-1"></a><span class="fu">### Implémentation de l'algorithme &lt;a name="Implementation de l'algorithme"&gt;&lt;/a&gt;</span></span>
+<span id="cb7-277"><a href="#cb7-277" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-278"><a href="#cb7-278" aria-hidden="true" tabindex="-1"></a><span class="dv">&amp;nbsp;&amp;nbsp;&amp;nbsp;</span> Pour déterminer la distribution empirique des vraies étiquettes, j'ai réalisé une fonction qui, à partir des données observées, renvoie la distribution exacte de ces données. Voici le code : </span>
+<span id="cb7-279"><a href="#cb7-279" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-282"><a href="#cb7-282" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb7-283"><a href="#cb7-283" aria-hidden="true" tabindex="-1"></a><span class="co">#| code-summary: "Voir le code"</span></span>
+<span id="cb7-284"><a href="#cb7-284" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> dist_Q(data, n_classes):</span>
+<span id="cb7-285"><a href="#cb7-285" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb7-286"><a href="#cb7-286" aria-hidden="true" tabindex="-1"></a><span class="co">    Calculate the distribution of the labels given by the observation</span></span>
+<span id="cb7-287"><a href="#cb7-287" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-288"><a href="#cb7-288" aria-hidden="true" tabindex="-1"></a><span class="co">    Parameters:</span></span>
+<span id="cb7-289"><a href="#cb7-289" aria-hidden="true" tabindex="-1"></a><span class="co">    - data (dict): A dict with worker's answers.</span></span>
+<span id="cb7-290"><a href="#cb7-290" aria-hidden="true" tabindex="-1"></a><span class="co">    - n_classes (int): The number of classes.</span></span>
+<span id="cb7-291"><a href="#cb7-291" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-292"><a href="#cb7-292" aria-hidden="true" tabindex="-1"></a><span class="co">    Returns:</span></span>
+<span id="cb7-293"><a href="#cb7-293" aria-hidden="true" tabindex="-1"></a><span class="co">    - dict: A dictionary containing the distribution of Q</span></span>
+<span id="cb7-294"><a href="#cb7-294" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb7-295"><a href="#cb7-295" aria-hidden="true" tabindex="-1"></a>    d <span class="op">=</span> {}</span>
+<span id="cb7-296"><a href="#cb7-296" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(worker_json(data))):</span>
+<span id="cb7-297"><a href="#cb7-297" aria-hidden="true" tabindex="-1"></a>        vec <span class="op">=</span> get_vec(<span class="bu">list</span>(worker_json(data)[<span class="ss">f"</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">"</span>].values()), n_classes)</span>
+<span id="cb7-298"><a href="#cb7-298" aria-hidden="true" tabindex="-1"></a>        d[<span class="ss">f"</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">"</span>] <span class="op">=</span> {}</span>
+<span id="cb7-299"><a href="#cb7-299" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> c <span class="kw">in</span> <span class="bu">range</span>(n_classes):</span>
+<span id="cb7-300"><a href="#cb7-300" aria-hidden="true" tabindex="-1"></a>            d[<span class="ss">f"</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">"</span>][<span class="ss">f"</span><span class="sc">{</span>c<span class="sc">}</span><span class="ss">"</span>] <span class="op">=</span> vec[c]</span>
+<span id="cb7-301"><a href="#cb7-301" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> d</span>
+<span id="cb7-302"><a href="#cb7-302" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb7-303"><a href="#cb7-303" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-304"><a href="#cb7-304" aria-hidden="true" tabindex="-1"></a>Ensuite nous cherchons à optimiser $\sigma$ et $\tau$, qui sont tous les deux des tenseurs, à l'aide d'une montée de gradient. Pour cela nous devons tout d'abord calculer les gradients de ces deux derniers. Chaque tenseur à son propre code mais les deux sont très similaires, nous montrerons que le code pour calculer le gradient de $\sigma$. </span>
+<span id="cb7-305"><a href="#cb7-305" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-308"><a href="#cb7-308" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb7-309"><a href="#cb7-309" aria-hidden="true" tabindex="-1"></a><span class="co">#| code-summary: "Voir le code"</span></span>
+<span id="cb7-310"><a href="#cb7-310" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> gradient_sigma(n_workers, n_classes, n_items, data,</span>
+<span id="cb7-311"><a href="#cb7-311" aria-hidden="true" tabindex="-1"></a>                   sigma, tau, Q):</span>
+<span id="cb7-312"><a href="#cb7-312" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb7-313"><a href="#cb7-313" aria-hidden="true" tabindex="-1"></a><span class="co">    Computes the gradient of the sigma parameter in a multi-class </span><span class="ch">\</span></span>
+<span id="cb7-314"><a href="#cb7-314" aria-hidden="true" tabindex="-1"></a><span class="co">    classification problem.</span></span>
+<span id="cb7-315"><a href="#cb7-315" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-316"><a href="#cb7-316" aria-hidden="true" tabindex="-1"></a><span class="co">    Parameters:</span></span>
+<span id="cb7-317"><a href="#cb7-317" aria-hidden="true" tabindex="-1"></a><span class="co">        n_workers (int): The number of workers.</span></span>
+<span id="cb7-318"><a href="#cb7-318" aria-hidden="true" tabindex="-1"></a><span class="co">        n_classes (int): The number of classes.</span></span>
+<span id="cb7-319"><a href="#cb7-319" aria-hidden="true" tabindex="-1"></a><span class="co">        n_items (int): The number of items.</span></span>
+<span id="cb7-320"><a href="#cb7-320" aria-hidden="true" tabindex="-1"></a><span class="co">        data (dict): The data for the classification problem.</span></span>
+<span id="cb7-321"><a href="#cb7-321" aria-hidden="true" tabindex="-1"></a><span class="co">        sigma (torch.Tensor): The sigma parameter.</span></span>
+<span id="cb7-322"><a href="#cb7-322" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-323"><a href="#cb7-323" aria-hidden="true" tabindex="-1"></a><span class="co">    Returns:</span></span>
+<span id="cb7-324"><a href="#cb7-324" aria-hidden="true" tabindex="-1"></a><span class="co">        DF_sigma (torch.Tensor): The gradient of the sigma parameter.</span></span>
+<span id="cb7-325"><a href="#cb7-325" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb7-326"><a href="#cb7-326" aria-hidden="true" tabindex="-1"></a>    alpha <span class="op">=</span> params(data, n_classes)[<span class="dv">0</span>]</span>
+<span id="cb7-327"><a href="#cb7-327" aria-hidden="true" tabindex="-1"></a>    DF_sigma <span class="op">=</span> torch.zeros((n_workers, n_classes, n_classes))</span>
+<span id="cb7-328"><a href="#cb7-328" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-329"><a href="#cb7-329" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> w <span class="kw">in</span> <span class="bu">range</span>(n_workers):</span>
+<span id="cb7-330"><a href="#cb7-330" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> v <span class="kw">in</span> <span class="bu">range</span>(n_classes):</span>
+<span id="cb7-331"><a href="#cb7-331" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> c <span class="kw">in</span> <span class="bu">range</span>(n_classes):</span>
+<span id="cb7-332"><a href="#cb7-332" aria-hidden="true" tabindex="-1"></a>                DFc <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb7-333"><a href="#cb7-333" aria-hidden="true" tabindex="-1"></a>                ind <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb7-334"><a href="#cb7-334" aria-hidden="true" tabindex="-1"></a>                <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(n_items):</span>
+<span id="cb7-335"><a href="#cb7-335" aria-hidden="true" tabindex="-1"></a>                    <span class="co"># expo = 0</span></span>
+<span id="cb7-336"><a href="#cb7-336" aria-hidden="true" tabindex="-1"></a>                    <span class="cf">if</span> data[<span class="ss">f"</span><span class="sc">{</span>w<span class="sc">}</span><span class="ss">"</span>][<span class="ss">f"</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">"</span>] <span class="op">==</span> c:</span>
+<span id="cb7-337"><a href="#cb7-337" aria-hidden="true" tabindex="-1"></a>                        ind <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb7-338"><a href="#cb7-338" aria-hidden="true" tabindex="-1"></a>                    <span class="cf">else</span>:</span>
+<span id="cb7-339"><a href="#cb7-339" aria-hidden="true" tabindex="-1"></a>                        ind <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb7-340"><a href="#cb7-340" aria-hidden="true" tabindex="-1"></a>                    k <span class="op">=</span> data[<span class="ss">f"</span><span class="sc">{</span>w<span class="sc">}</span><span class="ss">"</span>][<span class="ss">f"</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">"</span>]</span>
+<span id="cb7-341"><a href="#cb7-341" aria-hidden="true" tabindex="-1"></a>                    st <span class="op">=</span> sigma[w]<span class="op">+</span>tau[i]</span>
+<span id="cb7-342"><a href="#cb7-342" aria-hidden="true" tabindex="-1"></a>                    P <span class="op">=</span> torch.softmax(st, dim<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb7-343"><a href="#cb7-343" aria-hidden="true" tabindex="-1"></a>                    DFc <span class="op">+=</span> Q[<span class="ss">f"</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">"</span>][<span class="ss">f"</span><span class="sc">{</span>v<span class="sc">}</span><span class="ss">"</span>]<span class="op">*</span>(ind <span class="op">-</span> P[v, k])</span>
+<span id="cb7-344"><a href="#cb7-344" aria-hidden="true" tabindex="-1"></a>                DF_sigma[w, v, c] <span class="op">=</span> DFc<span class="op">-</span>alpha<span class="op">*</span>sigma[w, v, c]</span>
+<span id="cb7-345"><a href="#cb7-345" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> DF_sigma</span>
+<span id="cb7-346"><a href="#cb7-346" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb7-347"><a href="#cb7-347" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-348"><a href="#cb7-348" aria-hidden="true" tabindex="-1"></a>Maintenant que les gradients sont calculés il nous suffit de faire les montées de gradient associées. Les paramètres de la montée sont par défaut *learning_rate=0.01* et *max_iteration=10* mais ils peuvent être changés.</span>
+<span id="cb7-349"><a href="#cb7-349" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-352"><a href="#cb7-352" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb7-353"><a href="#cb7-353" aria-hidden="true" tabindex="-1"></a><span class="co">#| code-summary: "Voir le code"</span></span>
+<span id="cb7-354"><a href="#cb7-354" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> gradient_ascent(n_workers, n_classes, n_items, data, sigma, tau, Q,</span>
+<span id="cb7-355"><a href="#cb7-355" aria-hidden="true" tabindex="-1"></a>                    learning_rate<span class="op">=</span><span class="fl">0.01</span>, max_iterations<span class="op">=</span><span class="dv">10</span>):</span>
+<span id="cb7-356"><a href="#cb7-356" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb7-357"><a href="#cb7-357" aria-hidden="true" tabindex="-1"></a><span class="co">    Perform gradient ascent optimization.</span></span>
+<span id="cb7-358"><a href="#cb7-358" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-359"><a href="#cb7-359" aria-hidden="true" tabindex="-1"></a><span class="co">    Args:</span></span>
+<span id="cb7-360"><a href="#cb7-360" aria-hidden="true" tabindex="-1"></a><span class="co">        n_workers (int): Number of workers.</span></span>
+<span id="cb7-361"><a href="#cb7-361" aria-hidden="true" tabindex="-1"></a><span class="co">        n_classes (int): Number of classes.</span></span>
+<span id="cb7-362"><a href="#cb7-362" aria-hidden="true" tabindex="-1"></a><span class="co">        n_items (int): Number of items.</span></span>
+<span id="cb7-363"><a href="#cb7-363" aria-hidden="true" tabindex="-1"></a><span class="co">        data (dict): Data observed.</span></span>
+<span id="cb7-364"><a href="#cb7-364" aria-hidden="true" tabindex="-1"></a><span class="co">        sigma (torch.Tensor): Sigma parameter.</span></span>
+<span id="cb7-365"><a href="#cb7-365" aria-hidden="true" tabindex="-1"></a><span class="co">        learning_rate (float): Learning rate.</span></span>
+<span id="cb7-366"><a href="#cb7-366" aria-hidden="true" tabindex="-1"></a><span class="co">        max_iterations (int): Maximum number of iterations.</span></span>
+<span id="cb7-367"><a href="#cb7-367" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-368"><a href="#cb7-368" aria-hidden="true" tabindex="-1"></a><span class="co">    Returns:</span></span>
+<span id="cb7-369"><a href="#cb7-369" aria-hidden="true" tabindex="-1"></a><span class="co">        sigma, tau (float): Sigma and tau values.</span></span>
+<span id="cb7-370"><a href="#cb7-370" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb7-371"><a href="#cb7-371" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-372"><a href="#cb7-372" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(max_iterations):</span>
+<span id="cb7-373"><a href="#cb7-373" aria-hidden="true" tabindex="-1"></a>        sigma_up <span class="op">=</span> sigma <span class="op">+</span> learning_rate <span class="op">*</span> <span class="op">\</span></span>
+<span id="cb7-374"><a href="#cb7-374" aria-hidden="true" tabindex="-1"></a>            gradient_sigma(n_workers, n_classes, n_items, data, sigma, tau, Q)</span>
+<span id="cb7-375"><a href="#cb7-375" aria-hidden="true" tabindex="-1"></a>        tau_up <span class="op">=</span> tau <span class="op">+</span> learning_rate <span class="op">*</span> <span class="op">\</span></span>
+<span id="cb7-376"><a href="#cb7-376" aria-hidden="true" tabindex="-1"></a>            gradient_tau(n_workers, n_classes, n_items, data, sigma, tau, Q)</span>
+<span id="cb7-377"><a href="#cb7-377" aria-hidden="true" tabindex="-1"></a>        sigma <span class="op">=</span> sigma_up</span>
+<span id="cb7-378"><a href="#cb7-378" aria-hidden="true" tabindex="-1"></a>        tau <span class="op">=</span> tau_up</span>
+<span id="cb7-379"><a href="#cb7-379" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> sigma_up, tau_up</span>
+<span id="cb7-380"><a href="#cb7-380" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb7-381"><a href="#cb7-381" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-382"><a href="#cb7-382" aria-hidden="true" tabindex="-1"></a>Une fois nos tenseurs optimiisés nous allons les utiliser afin de mettre à jour la distribution $Q$. Les travailleurs pouvant faire des erreurs, ce code nous permet d'obtenir une distribution plus vraie au fur et à mesure des étapes.</span>
+<span id="cb7-383"><a href="#cb7-383" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-386"><a href="#cb7-386" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb7-387"><a href="#cb7-387" aria-hidden="true" tabindex="-1"></a><span class="co">#| code-summary: "Voir le code"</span></span>
+<span id="cb7-388"><a href="#cb7-388" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> update_Q(data, n_workers, n_classes, n_items, sigma, tau):</span>
+<span id="cb7-389"><a href="#cb7-389" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb7-390"><a href="#cb7-390" aria-hidden="true" tabindex="-1"></a><span class="co">    Update Q.</span></span>
+<span id="cb7-391"><a href="#cb7-391" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-392"><a href="#cb7-392" aria-hidden="true" tabindex="-1"></a><span class="co">    Args:</span></span>
+<span id="cb7-393"><a href="#cb7-393" aria-hidden="true" tabindex="-1"></a><span class="co">        data (dict): Data for optimization.</span></span>
+<span id="cb7-394"><a href="#cb7-394" aria-hidden="true" tabindex="-1"></a><span class="co">        n_workers (int): Number of workers.</span></span>
+<span id="cb7-395"><a href="#cb7-395" aria-hidden="true" tabindex="-1"></a><span class="co">        n_classes (int): Number of classes.</span></span>
+<span id="cb7-396"><a href="#cb7-396" aria-hidden="true" tabindex="-1"></a><span class="co">        n_items (int): Number of items.</span></span>
+<span id="cb7-397"><a href="#cb7-397" aria-hidden="true" tabindex="-1"></a><span class="co">        sigma (tensor): Sigma tensor.</span></span>
+<span id="cb7-398"><a href="#cb7-398" aria-hidden="true" tabindex="-1"></a><span class="co">        tau (tensor): Tau tensor.</span></span>
+<span id="cb7-399"><a href="#cb7-399" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb7-400"><a href="#cb7-400" aria-hidden="true" tabindex="-1"></a>    Q <span class="op">=</span> {}</span>
+<span id="cb7-401"><a href="#cb7-401" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(n_items):</span>
+<span id="cb7-402"><a href="#cb7-402" aria-hidden="true" tabindex="-1"></a>        Q[<span class="ss">f"</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">"</span>] <span class="op">=</span> {}</span>
+<span id="cb7-403"><a href="#cb7-403" aria-hidden="true" tabindex="-1"></a>        Q_list <span class="op">=</span> []</span>
+<span id="cb7-404"><a href="#cb7-404" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> v <span class="kw">in</span> <span class="bu">range</span>(n_classes):</span>
+<span id="cb7-405"><a href="#cb7-405" aria-hidden="true" tabindex="-1"></a>            S <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb7-406"><a href="#cb7-406" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> w <span class="kw">in</span> <span class="bu">range</span>(n_workers):</span>
+<span id="cb7-407"><a href="#cb7-407" aria-hidden="true" tabindex="-1"></a>                k <span class="op">=</span> data[<span class="ss">f"</span><span class="sc">{</span>w<span class="sc">}</span><span class="ss">"</span>][<span class="ss">f"</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">"</span>]</span>
+<span id="cb7-408"><a href="#cb7-408" aria-hidden="true" tabindex="-1"></a>                st <span class="op">=</span> sigma[w]<span class="op">+</span>tau[i]</span>
+<span id="cb7-409"><a href="#cb7-409" aria-hidden="true" tabindex="-1"></a>                sumexp <span class="op">=</span> torch.logsumexp(st, dim<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb7-410"><a href="#cb7-410" aria-hidden="true" tabindex="-1"></a>                S <span class="op">=</span> S <span class="op">+</span> st[v, k].item() <span class="op">-</span> sumexp[v].item()</span>
+<span id="cb7-411"><a href="#cb7-411" aria-hidden="true" tabindex="-1"></a>            Q[<span class="ss">f"</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">"</span>][<span class="ss">f"</span><span class="sc">{</span>v<span class="sc">}</span><span class="ss">"</span>] <span class="op">=</span> np.exp(S)</span>
+<span id="cb7-412"><a href="#cb7-412" aria-hidden="true" tabindex="-1"></a>            Q_list.append(Q[<span class="ss">f"</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">"</span>][<span class="ss">f"</span><span class="sc">{</span>v<span class="sc">}</span><span class="ss">"</span>])</span>
+<span id="cb7-413"><a href="#cb7-413" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> v1 <span class="kw">in</span> <span class="bu">range</span>(n_classes):</span>
+<span id="cb7-414"><a href="#cb7-414" aria-hidden="true" tabindex="-1"></a>            Q[<span class="ss">f"</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">"</span>][<span class="ss">f"</span><span class="sc">{</span>v1<span class="sc">}</span><span class="ss">"</span>] <span class="op">=</span> Q[<span class="ss">f"</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">"</span>][<span class="ss">f"</span><span class="sc">{</span>v1<span class="sc">}</span><span class="ss">"</span>]<span class="op">/</span>np.<span class="bu">sum</span>(Q_list)</span>
+<span id="cb7-415"><a href="#cb7-415" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> Q</span>
+<span id="cb7-416"><a href="#cb7-416" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb7-417"><a href="#cb7-417" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-418"><a href="#cb7-418" aria-hidden="true" tabindex="-1"></a>Afin d'optimiser au maximum la distribution de $Q$ il nous faut répéter ce code plusieurs fois. C'est-à-dire qu'on repart des calculs des gradients de $\sigma$ et $\tau$ mais cette fois en utilisant la nouvelle distribution pour $Q$ que l'on a obtenu, ainsi de suite.</span>
+<span id="cb7-419"><a href="#cb7-419" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-420"><a href="#cb7-420" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-421"><a href="#cb7-421" aria-hidden="true" tabindex="-1"></a><span class="fu">### Exemple &lt;a name="Exemple"&gt;&lt;/a&gt;</span></span>
+<span id="cb7-422"><a href="#cb7-422" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-423"><a href="#cb7-423" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Bluebirds</span></span>
+<span id="cb7-424"><a href="#cb7-424" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-425"><a href="#cb7-425" aria-hidden="true" tabindex="-1"></a><span class="dv">&amp;nbsp;&amp;nbsp;&amp;nbsp;</span> Nous avons ensuite réaliser plusieurs exemples afin de tester notre code. Tout d'abord nous avons utiliser le jeu de données *bluebirds* <span class="co">[</span><span class="ot">@bluebirds</span><span class="co">]</span>, il a fallu dans un premier temps le travailler pour le mettre dans un format adéquat au code. Tout est dans le fichier <span class="in">`script_test.py`</span>.</span>
+<span id="cb7-426"><a href="#cb7-426" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-427"><a href="#cb7-427" aria-hidden="true" tabindex="-1"></a>Nous avons choisi une initialisation de $\sigma$ et $\tau$ simples, nous avons pris des tenseurs de zéros. On choisit de réaliser seulement 10 itérations car cela converge assez vite donc on voit déjà les résultats apparaitrent. </span>
+<span id="cb7-428"><a href="#cb7-428" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-431"><a href="#cb7-431" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb7-432"><a href="#cb7-432" aria-hidden="true" tabindex="-1"></a><span class="co">#| code-summary: "Voir le code"</span></span>
+<span id="cb7-433"><a href="#cb7-433" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: FALSE</span></span>
+<span id="cb7-434"><a href="#cb7-434" aria-hidden="true" tabindex="-1"></a>sigma <span class="op">=</span> torch.zeros((n_workers, n_classes, n_classes))</span>
+<span id="cb7-435"><a href="#cb7-435" aria-hidden="true" tabindex="-1"></a>tau <span class="op">=</span> torch.zeros((n_items, n_classes, n_classes))</span>
+<span id="cb7-436"><a href="#cb7-436" aria-hidden="true" tabindex="-1"></a>num_iterations <span class="op">=</span> <span class="dv">10</span></span>
+<span id="cb7-437"><a href="#cb7-437" aria-hidden="true" tabindex="-1"></a>Q <span class="op">=</span> dist_Q(bluebirds, n_classes)</span>
+<span id="cb7-438"><a href="#cb7-438" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-439"><a href="#cb7-439" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(num_iterations):</span>
+<span id="cb7-440"><a href="#cb7-440" aria-hidden="true" tabindex="-1"></a>    sigma_up, tau_up <span class="op">=</span> gradient_ascent(</span>
+<span id="cb7-441"><a href="#cb7-441" aria-hidden="true" tabindex="-1"></a>        n_workers, n_classes, n_items, bluebirds, sigma, tau, Q)</span>
+<span id="cb7-442"><a href="#cb7-442" aria-hidden="true" tabindex="-1"></a>    Q <span class="op">=</span> update_Q(bluebirds, n_workers, n_classes, n_items, sigma_up, tau_up)</span>
+<span id="cb7-443"><a href="#cb7-443" aria-hidden="true" tabindex="-1"></a>    sigma <span class="op">=</span> sigma_up</span>
+<span id="cb7-444"><a href="#cb7-444" aria-hidden="true" tabindex="-1"></a>    tau <span class="op">=</span> tau_up</span>
+<span id="cb7-445"><a href="#cb7-445" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb7-446"><a href="#cb7-446" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-447"><a href="#cb7-447" aria-hidden="true" tabindex="-1"></a>On obtient suite à ce code des résultats qui correspondent plutôt bien à la réalite. Pour vérifier cela nous allons calculer l'erreur. Le code est adapté pour cet exemple, nous n'avons pas réalisé un code général, ce n'était pas le but principal.</span>
+<span id="cb7-448"><a href="#cb7-448" aria-hidden="true" tabindex="-1"></a>Suite à cela nous obtenons un taux d'erreur de $15\%$ ce qui est vraiment pas mal par rapport à ce qui a été trouvé dans l'article. Nous ne saurons pas dire pourquoi notre taux est plus faible que le leur (qui est de $36\%$).</span>
+<span id="cb7-449"><a href="#cb7-449" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-450"><a href="#cb7-450" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Hammer/Spammer</span></span>
+<span id="cb7-451"><a href="#cb7-451" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-452"><a href="#cb7-452" aria-hidden="true" tabindex="-1"></a><span class="dv">&amp;nbsp;&amp;nbsp;&amp;nbsp;</span> Nous avons ensuite réalisé un deuxième exemple pour nous conforter dans l'utilisation du code. Pour cela nous avons utiliser la fonction <span class="in">`simulate`</span> du package <span class="in">`peerannot`</span> <span class="co">[</span><span class="ot">@peerannot</span><span class="co">]</span> qui nous permet d'obtenir un jeu de données avec les réponses de travailleurs sur un certain nombres d'items et de classes. </span>
+<span id="cb7-453"><a href="#cb7-453" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-454"><a href="#cb7-454" aria-hidden="true" tabindex="-1"></a>Nous avons générer des données avec 10 travailleurs, 100 items et 5 classes. $\sigma$ et $\tau$ sont initialisés avec des uns cette fois. Le choix de l'initialisation est un peu arbitraire mais on préviligie les cas simples. Il a également fallu ré-arranger les données car le dictionnaire est trié dans l'ordre "item-worker-label" et pour notre code il faut l'ordre "worker-item-label". Pour cela nous avons utiliser la fonction <span class="in">`item_json`</span> dans le fichier <span class="in">`annex_def.py`</span>.</span>
+<span id="cb7-455"><a href="#cb7-455" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-458"><a href="#cb7-458" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb7-459"><a href="#cb7-459" aria-hidden="true" tabindex="-1"></a><span class="co">#| code-summary: "Voir le code"</span></span>
+<span id="cb7-460"><a href="#cb7-460" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: FALSE</span></span>
+<span id="cb7-461"><a href="#cb7-461" aria-hidden="true" tabindex="-1"></a>sigma <span class="op">=</span> torch.ones((n_workers, n_classes, n_classes))</span>
+<span id="cb7-462"><a href="#cb7-462" aria-hidden="true" tabindex="-1"></a>tau <span class="op">=</span> torch.ones((n_items, n_classes, n_classes))</span>
+<span id="cb7-463"><a href="#cb7-463" aria-hidden="true" tabindex="-1"></a>num_iterations <span class="op">=</span> <span class="dv">10</span></span>
+<span id="cb7-464"><a href="#cb7-464" aria-hidden="true" tabindex="-1"></a>Q <span class="op">=</span> dist_Q(hammer_spammer, n_classes)</span>
+<span id="cb7-465"><a href="#cb7-465" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-466"><a href="#cb7-466" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(num_iterations):</span>
+<span id="cb7-467"><a href="#cb7-467" aria-hidden="true" tabindex="-1"></a>    sigma_up, tau_up <span class="op">=</span> gradient_ascent(</span>
+<span id="cb7-468"><a href="#cb7-468" aria-hidden="true" tabindex="-1"></a>        n_workers, n_classes, n_items, hammer_spammer, sigma, tau, Q)</span>
+<span id="cb7-469"><a href="#cb7-469" aria-hidden="true" tabindex="-1"></a>    Q <span class="op">=</span> update_Q(hammer_spammer, n_workers, n_classes, n_items, sigma_up,</span>
+<span id="cb7-470"><a href="#cb7-470" aria-hidden="true" tabindex="-1"></a>                 tau_up)</span>
+<span id="cb7-471"><a href="#cb7-471" aria-hidden="true" tabindex="-1"></a>    sigma <span class="op">=</span> sigma_up</span>
+<span id="cb7-472"><a href="#cb7-472" aria-hidden="true" tabindex="-1"></a>    tau <span class="op">=</span> tau_up</span>
+<span id="cb7-473"><a href="#cb7-473" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb7-474"><a href="#cb7-474" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-475"><a href="#cb7-475" aria-hidden="true" tabindex="-1"></a>Le code est similaire au précédent. Nous allons, à présent, calculer le taux d'erreur. Le code est également pour ce jeu-ci donc pas général. Les données étant déjà presque parfaites (peu de personne se trompe), on obtient un taux d'erreur de $0\%$. C'est surprenant mais pas étonnant car les travailleurs ont quasiment tous donnés les bonnes réponses. </span>
+<span id="cb7-476"><a href="#cb7-476" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-477"><a href="#cb7-477" aria-hidden="true" tabindex="-1"></a><span class="fu">## Conclusion</span></span>
+<span id="cb7-478"><a href="#cb7-478" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-479"><a href="#cb7-479" aria-hidden="true" tabindex="-1"></a>Nous avons pu remarquer que le code réalisé nous donne de très bons résultats dans le cas de nos exemples. Ce code a néanmoins plusieurs limites. Tout d'abord lorsqu'il y a beaucoup de données le code est très chronophage à cause des nombreuses boucles. Cela peut donc être amélioré. De plus, les données que nous pouvons utiliser pour ce code sont seulement celles où tous les travailleurs ont voté pour tous les items ce qui n'est pas toujours le cas dans la vie. Nous avons eu la chance d'avoir des jeux de données pouvant tester notre code mais certains jeux ne passeront pas. </span>
+<span id="cb7-480"><a href="#cb7-480" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-481"><a href="#cb7-481" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-482"><a href="#cb7-482" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-483"><a href="#cb7-483" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-484"><a href="#cb7-484" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-485"><a href="#cb7-485" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-486"><a href="#cb7-486" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-487"><a href="#cb7-487" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-488"><a href="#cb7-488" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-489"><a href="#cb7-489" aria-hidden="true" tabindex="-1"></a><span class="fu">## Annexe &lt;a name="Annexe"&gt;&lt;/a&gt;</span></span>
+<span id="cb7-490"><a href="#cb7-490" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-491"><a href="#cb7-491" aria-hidden="true" tabindex="-1"></a><span class="fu">### Calcul des gradients de $\sigma$ et $\tau$</span></span>
+<span id="cb7-492"><a href="#cb7-492" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-493"><a href="#cb7-493" aria-hidden="true" tabindex="-1"></a>Soit $F$, la fonction définie par : </span>
+<span id="cb7-494"><a href="#cb7-494" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-495"><a href="#cb7-495" aria-hidden="true" tabindex="-1"></a>$$\begin{equation}</span>
+<span id="cb7-496"><a href="#cb7-496" aria-hidden="true" tabindex="-1"></a>\begin{split}</span>
+<span id="cb7-497"><a href="#cb7-497" aria-hidden="true" tabindex="-1"></a>F(\sigma,\tau)=&amp;\underset{w,i,v}{\sum}Q(Y_i=v)\,\text{log}P(X_{wi}=x_{wi}|Y_i=v)- \alpha\Omega^*(\sigma)-\beta\Psi^*(\tau)<span class="sc">\\</span></span>
+<span id="cb7-498"><a href="#cb7-498" aria-hidden="true" tabindex="-1"></a>=&amp; \underset{w,i,v}{\sum}Q(Y_i=v)\,\text{log}\Big<span class="co">[</span><span class="ot">\frac{\text{exp}(\sigma_w(v,x_{wi})+\tau_i(v,x_{wi}))}{\underset{c}{\sum}\text{exp}(\sigma_w(v,c)+\tau_i(v,c))}\Big</span><span class="co">]</span>- \alpha\Omega^*(\sigma)-\beta\Psi^*(\tau)</span>
+<span id="cb7-499"><a href="#cb7-499" aria-hidden="true" tabindex="-1"></a>\end{split}</span>
+<span id="cb7-500"><a href="#cb7-500" aria-hidden="true" tabindex="-1"></a>\end{equation}</span>
+<span id="cb7-501"><a href="#cb7-501" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb7-502"><a href="#cb7-502" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-503"><a href="#cb7-503" aria-hidden="true" tabindex="-1"></a>On cherche à calculer $\frac{\partial F}{\partial \sigma_w(v,c)}$ et $\frac{\partial F}{\partial \tau_i(v,c)}$. Commençons d'abord par dériver par rapport à $\sigma_w(v,c)$ et nous verrons que c'est le même calcul pour $\tau_i(v,c)$</span>
+<span id="cb7-504"><a href="#cb7-504" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-505"><a href="#cb7-505" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>$\text{log}\big(\frac{u}{v}\big)'= \frac{u'v-v'u}{uv}$</span>
+<span id="cb7-506"><a href="#cb7-506" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-507"><a href="#cb7-507" aria-hidden="true" tabindex="-1"></a>  Posons $u=\text{exp}(\sigma_w(v,c)+\tau_i(v,c))$ et $v=\underset{c}{\sum}\text{exp}(\sigma_w(v,c)+\tau_i(v,c))$</span>
+<span id="cb7-508"><a href="#cb7-508" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-509"><a href="#cb7-509" aria-hidden="true" tabindex="-1"></a>  On a alors $u'=\text{exp}(\sigma_w(v,c)+\tau_i(v,c))$ et $v'=\text{exp}(\sigma_w(v,c)+\tau_i(v,c))$</span>
+<span id="cb7-510"><a href="#cb7-510" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-511"><a href="#cb7-511" aria-hidden="true" tabindex="-1"></a>  On obtient alors : </span>
+<span id="cb7-512"><a href="#cb7-512" aria-hidden="true" tabindex="-1"></a>  $$</span>
+<span id="cb7-513"><a href="#cb7-513" aria-hidden="true" tabindex="-1"></a>  \begin{equation}</span>
+<span id="cb7-514"><a href="#cb7-514" aria-hidden="true" tabindex="-1"></a>  \begin{split}</span>
+<span id="cb7-515"><a href="#cb7-515" aria-hidden="true" tabindex="-1"></a>  \text{log}\Big(\frac{u}{v}\Big)'&amp;=\frac{\text{exp}(\sigma_w(v,c)+\tau_i(v,c))\underset{c}{\sum}\text{exp}(\sigma_w(v,c)+\tau_i(v,c))-\text{exp}(\sigma_w(v,c)+\tau_i(v,c))^2}{\text{exp}(\sigma_w(v,c)+\tau_i(v,c))\underset{c}{\sum}\text{exp}(\sigma_w(v,c)+\tau_i(v,c))}<span class="sc">\\</span></span>
+<span id="cb7-516"><a href="#cb7-516" aria-hidden="true" tabindex="-1"></a>  &amp;=1 - \frac{\text{exp}(\sigma_w(v,c)+\tau_i(v,c))}{\underset{c}{\sum}\text{exp}(\sigma_w(v,c)+\tau_i(v,c))}</span>
+<span id="cb7-517"><a href="#cb7-517" aria-hidden="true" tabindex="-1"></a>  \end{split}</span>
+<span id="cb7-518"><a href="#cb7-518" aria-hidden="true" tabindex="-1"></a>  \end{equation}</span>
+<span id="cb7-519"><a href="#cb7-519" aria-hidden="true" tabindex="-1"></a>  $$</span>
+<span id="cb7-520"><a href="#cb7-520" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-521"><a href="#cb7-521" aria-hidden="true" tabindex="-1"></a>  Dans notre cas, on a $x_{wi}=c$ donc l'égalité ci-dessus est vraie si $x_{wi}=c$, on obtient alors </span>
+<span id="cb7-522"><a href="#cb7-522" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-523"><a href="#cb7-523" aria-hidden="true" tabindex="-1"></a>  $$</span>
+<span id="cb7-524"><a href="#cb7-524" aria-hidden="true" tabindex="-1"></a>  \text{log}\Big(\frac{u}{v}\Big)=\mathbb{1}(x_{wi}=c) - \frac{\text{exp}(\sigma_w(v,c)+\tau_i(v,c))}{\underset{c}{\sum}\text{exp}(\sigma_w(v,c)+\tau_i(v,c))}</span>
+<span id="cb7-525"><a href="#cb7-525" aria-hidden="true" tabindex="-1"></a>  $$</span>
+<span id="cb7-526"><a href="#cb7-526" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-527"><a href="#cb7-527" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-528"><a href="#cb7-528" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>$(uv)''=u'v+v'u$</span>
+<span id="cb7-529"><a href="#cb7-529" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-530"><a href="#cb7-530" aria-hidden="true" tabindex="-1"></a>  Posons $u=Q(Y_i=v)$ et $v=\text{log}\Big[\frac{\text{exp}(\sigma_w(v,x_{wi})+\tau_i(v,x_{wi}))}{\underset{c}{\sum}\text{exp}(\sigma_w(v,c)+\tau_i(v,c))}\Big]$</span>
+<span id="cb7-531"><a href="#cb7-531" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-532"><a href="#cb7-532" aria-hidden="true" tabindex="-1"></a>  Donc : $u'=0$ et $v'$ a été calculé précédemment</span>
+<span id="cb7-533"><a href="#cb7-533" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-534"><a href="#cb7-534" aria-hidden="true" tabindex="-1"></a>  On obtient ainsi:</span>
+<span id="cb7-535"><a href="#cb7-535" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-536"><a href="#cb7-536" aria-hidden="true" tabindex="-1"></a>  $$(uv)'=Q(Y_i=v)\Big(\mathbb{1}(x_{wi}=c) - \frac{\text{exp}(\sigma_w(v,c)+\tau_i(v,c))}{\underset{c}{\sum}\text{exp}(\sigma_w(v,c)+\tau_i(v,c))}\Big)$$</span>
+<span id="cb7-537"><a href="#cb7-537" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-538"><a href="#cb7-538" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Pour $\alpha\frac{1}{2}\underset{w}{\sum}\underset{v,c}{\sum}\big<span class="co">[</span><span class="ot">\sigma_w(v,c)\big</span><span class="co">]</span>^2$ on obtient $\alpha\sigma_w(v,c)$ car on dérive par rapport à $\sigma_w(v,c)$ et donc la somme est nulle sauf pour les indices par lesquels on dérive et $\Big(\beta\frac{1}{2}\underset{i}{\sum}\underset{v,c}{\sum}\big<span class="co">[</span><span class="ot">\tau_i(v,c)\big</span><span class="co">]</span>^2\Big)'=0$</span>
+<span id="cb7-539"><a href="#cb7-539" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-540"><a href="#cb7-540" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Finalement nous obtenons la dérivée suivante :</span>
+<span id="cb7-541"><a href="#cb7-541" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-542"><a href="#cb7-542" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb7-543"><a href="#cb7-543" aria-hidden="true" tabindex="-1"></a>\frac{\partial F}{\partial \sigma_w(v,c)} = \sum_i Q(Y_i=v)<span class="co">[</span><span class="ot">\mathbb{1}(x_{wi}=c)-P(X_{wi}=c|Y_i=v)</span><span class="co">]</span>-\alpha\sigma_w(v,c)</span>
+<span id="cb7-544"><a href="#cb7-544" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb7-545"><a href="#cb7-545" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-546"><a href="#cb7-546" aria-hidden="true" tabindex="-1"></a>Les calculs sont les mêmes pour le gradient de $F$ par rapport à $\tau_i(v,c)$ et on obtient donc bien le résultat suivant : </span>
+<span id="cb7-547"><a href="#cb7-547" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-548"><a href="#cb7-548" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb7-549"><a href="#cb7-549" aria-hidden="true" tabindex="-1"></a>\frac{\partial F}{\partial \tau_i(v,c)} = \sum_w Q(Y_i=v)<span class="co">[</span><span class="ot">\mathbb{1}(x_{wi}=c)-P(X_{wi}=c|Y_i=v)</span><span class="co">]</span>-\beta\tau_i(v,c)</span>
+<span id="cb7-550"><a href="#cb7-550" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb7-551"><a href="#cb7-551" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-552"><a href="#cb7-552" aria-hidden="true" tabindex="-1"></a><span class="fu">## Références</span></span>
+</code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+
+
+
+</body></html>
