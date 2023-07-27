@@ -12,7 +12,7 @@ toc-title: "Sommaire"
 bibliography: biblio.bib
 author:
   - name: Anne Bernard
-date: 27/07/2023
+date: 2023-07-27
 ---
 
 
