@@ -9,7 +9,7 @@ __pycache__/
 # Distribution / packaging
 .Rhistory
 .log
-.Rmd
+Presentation.Rmd
 .Python
 Crowdsourcing.html
 build/
