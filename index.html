@@ -254,7 +254,7 @@ D_{KL}(Q||P)\,\, = \,\, &amp;-\underset{i,v}{\sum}Q(Y_i=v)\underset{w,c}{\sum}P(
 <p>Les variables <span class="math inline">\(\xi_w(v,c)\)</span> et <span class="math inline">\(\zeta_i(v,c)\)</span> modélisent les possibles fluctuations. À noter que ces variables ne sont pas nécessairement positives. Lorsqu’il y a un grand nombre d’observation, les fluctuations sont approximativement distribuées normalement (théorème centrale limite). C’est pourquoi on introduit des fonctions de régularisations pour pénaliser les fortes fluctuations. L’entropie <span class="math inline">\(H(Y)\)</span> peut être vue comme pénalisant une large déviation à la distribution uniforme.</p>
 <p>On obtient ensuite la forme duale :</p>
 <p><span class="math display">\[
-\underset{\sigma,\tau,Q}{\text{max}} \,\,\,\, \underset{i,v}Q(Y_i=v)\,\underset{w}{\sum}\text{log}\,P(X_{wi}=x_{wi}|Y_i=v)+H(Y)-\alpha\Omega^{*}(\sigma)-\beta\Psi^{*}(\tau)
+\underset{\sigma,\tau,Q}{\text{max}} \,\,\,\, \underset{i,v}{\sum}Q(Y_i=v)\,\underset{w}{\sum}\text{log}\,P(X_{wi}=x_{wi}|Y_i=v)+H(Y)-\alpha\Omega^{*}(\sigma)-\beta\Psi^{*}(\tau)
 \]</span></p>
 <p>où <span class="math display">\[\Omega^{*}(\sigma)=\frac{1}{2}\underset{w}{\sum}\underset{v,c}{\sum}[\sigma_w(v,c)]^2,
 \]</span> <span class="math display">\[\Psi^{*}(\tau)=\frac{1}{2}\underset{i}{\sum}\underset{v,c}{\sum}[\tau_i(v,c)]^2,
@@ -1033,7 +1033,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb7-156"><a href="#cb7-156" aria-hidden="true" tabindex="-1"></a>On obtient ensuite la forme duale :</span>
 <span id="cb7-157"><a href="#cb7-157" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-158"><a href="#cb7-158" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb7-159"><a href="#cb7-159" aria-hidden="true" tabindex="-1"></a>\underset{\sigma,\tau,Q}{\text{max}} \,\,\,\, \underset{i,v}Q(Y_i=v)\,\underset{w}{\sum}\text{log}\,P(X_{wi}=x_{wi}|Y_i=v)+H(Y)-\alpha\Omega^{*}(\sigma)-\beta\Psi^{*}(\tau)</span>
+<span id="cb7-159"><a href="#cb7-159" aria-hidden="true" tabindex="-1"></a>\underset{\sigma,\tau,Q}{\text{max}} \,\,\,\, \underset{i,v}{\sum}Q(Y_i=v)\,\underset{w}{\sum}\text{log}\,P(X_{wi}=x_{wi}|Y_i=v)+H(Y)-\alpha\Omega^{*}(\sigma)-\beta\Psi^{*}(\tau)</span>
 <span id="cb7-160"><a href="#cb7-160" aria-hidden="true" tabindex="-1"></a>$$</span>
 <span id="cb7-161"><a href="#cb7-161" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-162"><a href="#cb7-162" aria-hidden="true" tabindex="-1"></a>où </span>
