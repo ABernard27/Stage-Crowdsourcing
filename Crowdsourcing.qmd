@@ -156,7 +156,7 @@ Les variables $\xi_w(v,c)$ et $\zeta_i(v,c)$ modélisent les possibles fluctuati
 On obtient ensuite la forme duale :
 
 $$
-\underset{\sigma,\tau,Q}{\text{max}} \,\,\,\, \underset{i,v}Q(Y_i=v)\,\underset{w}{\sum}\text{log}\,P(X_{wi}=x_{wi}|Y_i=v)+H(Y)-\alpha\Omega^{*}(\sigma)-\beta\Psi^{*}(\tau)
+\underset{\sigma,\tau,Q}{\text{max}} \,\,\,\, \underset{i,v}{\sum}Q(Y_i=v)\,\underset{w}{\sum}\text{log}\,P(X_{wi}=x_{wi}|Y_i=v)+H(Y)-\alpha\Omega^{*}(\sigma)-\beta\Psi^{*}(\tau)
 $$
 
 où 
